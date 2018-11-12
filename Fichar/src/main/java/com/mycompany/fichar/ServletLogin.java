@@ -8,31 +8,21 @@ package com.mycompany.fichar;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.annotation.Resource;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.servlet.RequestDispatcher;
+import java.util.Iterator;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
 
 /**
  *
  * @author admin
  */
-@WebServlet(name = "ServletRegistro", urlPatterns = {"/ServletRegistro"})
-public class ServletRegistro extends HttpServlet {
+@WebServlet(name = "ServletLogin", urlPatterns = {"/ServletLogin"})
+public class ServletLogin extends HttpServlet {
     
-    @Resource
-    Validator validador;
-    
-    ArrayList usuarios;
+    ArrayList login;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,63 +34,43 @@ public class ServletRegistro extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, NamingException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ServletRegistro</title>");            
+            out.println("<title>Servlet ServletLogin</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ServletRegistro at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ServletLogin at " + request.getContextPath() + "</h1>");
             
             String user = request.getParameter("user");
-            
-            String email = request.getParameter("email");
-            String confirmaEmail = request.getParameter("confirmaEmail");
-            
             String password = request.getParameter("pass");
-            String confirmaPass = request.getParameter("confirmaPass");
             
-            EJBSignUpLocal bean = (EJBSignUpLocal) new InitialContext().lookup("java:module/EJBSignUp");
+            login = (ArrayList) this.getServletContext().getAttribute("usuario");
             
-            UserPass userPass = new UserPass();
             
-            bean.setUser(user);
-            bean.setEmail(email);
-            bean.setPassword(password);
+            UserPass comprobar = new UserPass();
             
-            String registroCorrecto = "/index.html";
-            String registroFallo = "/registro.html";
+            comprobar.setPass(password);
+            comprobar.setUser(user);
             
-            //Añadir cosas al contexto
-            //this.getServletContext().setAtribute
+            Iterator it = login.iterator();
             
-            if(validador.validate(bean).isEmpty() && email.equals(confirmaEmail) && password.equals(confirmaPass)){
-            /*    out.println("<script type='text/javascript'>");
-                out.println("alert('Te has registrado correctamente');");
-                out.println("</script>"); */
-              /*  userPass.setUser(user);
-                userPass.setPass(password);
-                usuarios.add(userPass);
-                this.getServletContext().setAttribute("usuario", usuarios); */
-                RequestDispatcher valido = request.getRequestDispatcher(registroCorrecto);
-                valido.forward(request, response); 
-            }/* else {
-                RequestDispatcher noValido = request.getRequestDispatcher(registroFallo);
-                noValido.forward(request, response);
-                out.println("No has podido registrarte correctamente");
-                
-            }   */
+            while(it.hasNext()){
+                Object iterator = it.next();
+                if(iterator.equals(login)){
+                    out.println("Logeo correcto");
+                }
+            }
+            
+            
+            
             
             out.println("</body>");
             out.println("</html>");
-            
-            
-            
-        
         }
     }
 
@@ -116,11 +86,7 @@ public class ServletRegistro extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (NamingException ex) {
-            Logger.getLogger(ServletRegistro.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -134,11 +100,7 @@ public class ServletRegistro extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (NamingException ex) {
-            Logger.getLogger(ServletRegistro.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**

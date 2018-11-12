@@ -19,18 +19,19 @@ import javax.validation.constraints.Size;
 public interface EJBSignUpLocal {
     
     @Size(min = 5, max = 20, message="El usuario debe contener entre 5 y 20 carácteres")
-    @NotNull
+    @NotNull(message="Debes escribir un usuario")
     public String getUser();
     
     public void setUser(String user);
     
     @Password(message="La contraseña no cumple los requisitos")
-    @NotNull
+    @NotNull(message="Debes escribir una contraseña")
     public String getPassword();
     
     public void setPassword(String password);
     
     @Email(message="El email no es correcto")
+    @NotNull(message="Debes escribir un email")
     public String getEmail();
     
     public void setEmail(String email);

@@ -1,5 +1,7 @@
 /home/admin/NetBeansProjects/Fichar/src/main/java/com/mycompany/fichar/EJBSignUp.java
 /home/admin/NetBeansProjects/Fichar/src/main/java/com/mycompany/fichar/EJBSignUpLocal.java
 /home/admin/NetBeansProjects/Fichar/src/main/java/com/mycompany/fichar/ServletRegistro.java
+/home/admin/NetBeansProjects/Fichar/src/main/java/com/mycompany/fichar/UserPass.java
 /home/admin/NetBeansProjects/Fichar/src/main/java/com/mycompany/fichar/Password.java
 /home/admin/NetBeansProjects/Fichar/src/main/java/com/mycompany/fichar/Email.java
+/home/admin/NetBeansProjects/Fichar/src/main/java/com/mycompany/fichar/ServletLogin.java

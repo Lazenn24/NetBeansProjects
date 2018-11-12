@@ -1,1 +1,5 @@
+com/mycompany/fichar/Email.class
+com/mycompany/fichar/Password.class
 com/mycompany/fichar/ServletRegistro.class
+com/mycompany/fichar/EJBSignUp.class
+com/mycompany/fichar/EJBSignUpLocal.class
