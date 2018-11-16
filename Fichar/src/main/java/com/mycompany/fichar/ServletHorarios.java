@@ -7,8 +7,12 @@ package com.mycompany.fichar;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.security.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,9 +24,9 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author admin
  */
-@WebServlet(name = "ServletLogin", urlPatterns = {"/ServletLogin"})
-public class ServletLogin extends HttpServlet {
-    
+@WebServlet(name = "ServletHorarios", urlPatterns = {"/ServletHorarios"})
+public class ServletHorarios extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -40,44 +44,36 @@ public class ServletLogin extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ServletLogin</title>");            
+            out.println("<title>Servlet ServletHorarios</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ServletLogin at " + request.getContextPath() + "</h1>");
-            
-            String user = request.getParameter("user");
-            String password = request.getParameter("pass");
-            
-            ArrayList<UserPass> usuarios = (ArrayList<UserPass>) this.getServletContext().getAttribute("usuario");
-    
-            UserPass comprobar = new UserPass();
-            
-            comprobar.setPass(password);
-            comprobar.setUser(user);
-            
-            String horarios = "/horarios.html";
-            RequestDispatcher rd = request.getRequestDispatcher(horarios);
+            out.println("<h1>Servlet ServletHorarios at " + request.getContextPath() + "</h1>");
             
             
-            for(UserPass uP: usuarios){
-                if(uP.comparar(user, password)){
-                    rd.forward(request, response);
-                }
+            String entrada = "horarios.html";
+            RequestDispatcher rd = request.getRequestDispatcher(entrada);
+            
+            if(request.getParameter("entrada") != null){
+                rd.include(request, response);
+                out.println("<p>Hora de entrada: " + fichar() + "</p>");
+            } 
+            if(request.getParameter("salida") !=null){
+                rd.include(request, response);
+                out.println("<p>Hora de salida: " + fichar() + "</p>");
             }
-            
-           
-                
-            
-            
-            
-            
-            
-            
-            
             out.println("</body>");
             out.println("</html>");
         }
     }
+    
+    public String fichar() {
+        
+        DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        return sdf.format(date);
+    }
+
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

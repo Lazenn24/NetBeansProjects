@@ -28,11 +28,9 @@ import javax.validation.Validator;
  */
 @WebServlet(name = "ServletRegistro", urlPatterns = {"/ServletRegistro"})
 public class ServletRegistro extends HttpServlet {
-    
+
     @Resource
     Validator validador;
-    
-    ArrayList usuarios;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -51,56 +49,70 @@ public class ServletRegistro extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ServletRegistro</title>");            
+            out.println("<title>Servlet ServletRegistro</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ServletRegistro at " + request.getContextPath() + "</h1>");
-            
+
             String user = request.getParameter("user");
-            
+
             String email = request.getParameter("email");
             String confirmaEmail = request.getParameter("confirmaEmail");
-            
+
             String password = request.getParameter("pass");
             String confirmaPass = request.getParameter("confirmaPass");
-            
+
             EJBSignUpLocal bean = (EJBSignUpLocal) new InitialContext().lookup("java:module/EJBSignUp");
-            
-            UserPass userPass = new UserPass();
-            
+
             bean.setUser(user);
             bean.setEmail(email);
             bean.setPassword(password);
-            
+
             String registroCorrecto = "/index.html";
             String registroFallo = "/registro.html";
-            
-            //Añadir cosas al contexto
-            //this.getServletContext().setAtribute
-            
-            if(validador.validate(bean).isEmpty() && email.equals(confirmaEmail) && password.equals(confirmaPass)){
-            /*    out.println("<script type='text/javascript'>");
+
+            if (validador.validate(bean).isEmpty() && email.equals(confirmaEmail) && password.equals(confirmaPass)) {
+                /*    out.println("<script type='text/javascript'>");
                 out.println("alert('Te has registrado correctamente');");
                 out.println("</script>"); */
-              /*  userPass.setUser(user);
+                UserPass userPass = new UserPass();
+                userPass.setUser(user);
                 userPass.setPass(password);
+                ArrayList<UserPass> usuarios;
+                if (getServletContext().getAttribute("usuario") == null) {
+                    usuarios = new ArrayList<UserPass>();
+                    getServletContext().setAttribute("usuario", usuarios);
+
+                } else {
+                    usuarios = (ArrayList<UserPass>) getServletContext().getAttribute("usuario");
+
+                }
                 usuarios.add(userPass);
-                this.getServletContext().setAttribute("usuario", usuarios); */
+
                 RequestDispatcher valido = request.getRequestDispatcher(registroCorrecto);
-                valido.forward(request, response); 
-            }/* else {
-                RequestDispatcher noValido = request.getRequestDispatcher(registroFallo);
-                noValido.forward(request, response);
-                out.println("No has podido registrarte correctamente");
-                
-            }   */
-            
+                valido.forward(request, response);
+
+            }
+
+            RequestDispatcher noValido = request.getRequestDispatcher(registroFallo);
+            noValido.include(request, response);
+
+            out.println("No has podido registrarte correctamente");
+            for (ConstraintViolation cv : validador.validate(bean)) {
+                out.println("<p>" + cv.getMessage() + "</p>");
+
+            }
+
+            if (!email.equals(confirmaEmail)) {
+                out.println("<p>El email no coincide</p>");
+            }
+
+            if (!password.equals(confirmaPass)) {
+                out.println("<p>La contraseña no coincide</p>");
+            }
+
             out.println("</body>");
             out.println("</html>");
-            
-            
-            
-        
+
         }
     }
 
