@@ -7,13 +7,12 @@ package com.mycompany.fichar;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Date;
-import javax.servlet.RequestDispatcher;
+import java.util.Hashtable;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,8 +23,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author admin
  */
-@WebServlet(name = "ServletHorarios", urlPatterns = {"/ServletHorarios"})
-public class ServletHorarios extends HttpServlet {
+@WebServlet(name = "ServletTabla", urlPatterns = {"/ServletTabla"})
+public class ServletTabla extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,34 +43,30 @@ public class ServletHorarios extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ServletHorarios</title>");            
+            out.println("<title>Servlet ServletTabla</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ServletHorarios at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ServletTabla at " + request.getContextPath() + "</h1>");
             
+            ArrayList horarioUsuario;
+            Hashtable horarios;
             
-            
-            RequestDispatcher tabla = request.getRequestDispatcher("/ServletTabla.java");
-            
-            if(request.getParameter("entrada") != null){
-                entradaSalida entrada = entradaSalida.ENTRADA;
-                request.setAttribute("entrada", entrada);
-                tabla.forward(request, response);
-            } 
-            if(request.getParameter("salida") !=null){
-                entradaSalida salida = entradaSalida.SALIDA;
-                request.setAttribute("salida", salida);
-                tabla.forward(request, response);
-            }
+            String user = request.getSession().getId();
+
             out.println("</body>");
             out.println("</html>");
         }
     }
 
-    
-    public enum entradaSalida{ENTRADA, SALIDA}
-    
-    
+    // Metodo para conseguir la hora en formato Año, mes, dia, hora, minuto
+    public String getHora() {
+
+        DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+        Date date = new Date();
+        return sdf.format(date);
+    }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
