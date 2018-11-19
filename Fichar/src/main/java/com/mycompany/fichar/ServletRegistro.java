@@ -54,6 +54,7 @@ public class ServletRegistro extends HttpServlet {
             out.println("<body>");
 
             String user = request.getParameter("user");
+            String userExists = "";
 
             String email = request.getParameter("email");
             String confirmaEmail = request.getParameter("confirmaEmail");
@@ -69,34 +70,42 @@ public class ServletRegistro extends HttpServlet {
 
             String registroCorrecto = "/index.html";
             String registroFallo = "/registro.html";
+            RequestDispatcher valido = request.getRequestDispatcher(registroCorrecto);
+            RequestDispatcher noValido = request.getRequestDispatcher(registroFallo);
 
             if (validador.validate(bean).isEmpty() && email.equals(confirmaEmail) && password.equals(confirmaPass)) {
                 /*    out.println("<script type='text/javascript'>");
                 out.println("alert('Te has registrado correctamente');");
                 out.println("</script>"); */
-                UserPass userPass = new UserPass();
-                userPass.setUser(user);
-                userPass.setPass(password);
+                UserPass uPSignUp = new UserPass();
+                uPSignUp.setUser(user);
+                uPSignUp.setPass(password);
                 ArrayList<UserPass> usuarios;
+
                 if (getServletContext().getAttribute("usuario") == null) {
                     usuarios = new ArrayList<UserPass>();
                     getServletContext().setAttribute("usuario", usuarios);
-
                 } else {
                     usuarios = (ArrayList<UserPass>) getServletContext().getAttribute("usuario");
 
                 }
-                usuarios.add(userPass);
+                if (!usuarios.isEmpty()) {
+                    for (UserPass uP : usuarios) {
+                        if (uP.compararUser(user)) {
+                            userExists = "El usuario " + user + "ya existe";
+                        }
 
-                RequestDispatcher valido = request.getRequestDispatcher(registroCorrecto);
-                valido.forward(request, response);
+                    }
 
+                } else {
+                    usuarios.add(uPSignUp);
+                    valido.forward(request, response);
+                }
             }
 
-            RequestDispatcher noValido = request.getRequestDispatcher(registroFallo);
             noValido.include(request, response);
+            out.println("<p>" + userExists + "</p>");
 
-            out.println("No has podido registrarte correctamente");
             for (ConstraintViolation cv : validador.validate(bean)) {
                 out.println("<p>" + cv.getMessage() + "</p>");
 

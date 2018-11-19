@@ -31,8 +31,12 @@ public class UserPass {
         this.pass = pass;
     }
     
-    public boolean comparar(String user, String pass){
+    public boolean compararUserPass(String user, String pass){
         return this.user.equals(user) && this.pass.equals(pass);
+    }
+    
+    public boolean compararUser(String user){
+            return this.user.equals(user);
     }
     
     

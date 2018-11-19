@@ -8,13 +8,19 @@ package com.mycompany.fichar;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Resource;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 
 /**
  *
@@ -22,7 +28,10 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "ServletLogin", urlPatterns = {"/ServletLogin"})
 public class ServletLogin extends HttpServlet {
-    
+
+    @Resource
+    Validator validador;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -33,47 +42,51 @@ public class ServletLogin extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, NamingException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ServletLogin</title>");            
+            out.println("<title>Servlet ServletLogin</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet ServletLogin at " + request.getContextPath() + "</h1>");
-            
+
             String user = request.getParameter("user");
             String password = request.getParameter("pass");
-            
-            ArrayList<UserPass> usuarios = (ArrayList<UserPass>) this.getServletContext().getAttribute("usuario");
-    
-            UserPass comprobar = new UserPass();
-            
-            comprobar.setPass(password);
-            comprobar.setUser(user);
-            
+
+            EJBLoginLocal bean = (EJBLoginLocal) new InitialContext().lookup("java:module/EJBLogin");
+
+            bean.setPassword(password);
+            bean.setUser(user);
+
+            ArrayList<UserPass> usuarios = (ArrayList<UserPass>) getServletContext().getAttribute("usuario");
+
+            UserPass uPLogin = new UserPass();
+
+            uPLogin.setPass(password);
+            uPLogin.setUser(user);
+
             String horarios = "/horarios.html";
-            RequestDispatcher rd = request.getRequestDispatcher(horarios);
-            
-            
-            for(UserPass uP: usuarios){
-                if(uP.comparar(user, password)){
-                    rd.forward(request, response);
+            String fallo = "/index.html";
+            RequestDispatcher valido = request.getRequestDispatcher(horarios);
+            RequestDispatcher noValido = request.getRequestDispatcher(fallo);
+
+            if (validador.validate(bean).isEmpty()) {
+                for (UserPass uP : usuarios) {
+                    if (uP.compararUserPass(user, password)) {
+                        valido.forward(request, response);
+                    }
                 }
+            } else {
+               noValido.include(request, response);
+               for(ConstraintViolation cv : validador.validate(bean)){
+                   out.println("<p> " + cv.getMessage() + "</p>");
+               }
             }
-            
-           
-                
-            
-            
-            
-            
-            
-            
-            
+
             out.println("</body>");
             out.println("</html>");
         }
@@ -91,7 +104,11 @@ public class ServletLogin extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (NamingException ex) {
+            Logger.getLogger(ServletLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -105,7 +122,11 @@ public class ServletLogin extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (NamingException ex) {
+            Logger.getLogger(ServletLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
