@@ -11,8 +11,10 @@ import java.security.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Hashtable;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -44,34 +46,44 @@ public class ServletHorarios extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ServletHorarios</title>");            
+            out.println("<title>Servlet ServletHorarios</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet ServletHorarios at " + request.getContextPath() + "</h1>");
-            
-            
-            
-            RequestDispatcher tabla = request.getRequestDispatcher("/ServletTabla.java");
-            
-            if(request.getParameter("entrada") != null){
+
+            RequestDispatcher tabla = request.getRequestDispatcher("/ServletTabla");
+            RequestDispatcher showTable = request.getRequestDispatcher("/horarios.html");
+
+            Hashtable horarios;
+            ArrayList<UserSchedule> horarioUsuario;
+            String user = (String) request.getSession().getAttribute("user");
+
+            if (request.getParameter("entrada") != null) {
                 entradaSalida entrada = entradaSalida.ENTRADA;
-                request.setAttribute("entrada", entrada);
-                tabla.forward(request, response);
-            } 
-            if(request.getParameter("salida") !=null){
-                entradaSalida salida = entradaSalida.SALIDA;
-                request.setAttribute("salida", salida);
+                request.setAttribute("inicio", entrada);
                 tabla.forward(request, response);
             }
+
+            if (request.getParameter("salida") != null) {
+                entradaSalida salida = entradaSalida.SALIDA;
+                request.setAttribute("fin", salida);
+                tabla.forward(request, response);
+            }
+
+            horarios = (Hashtable) request.getServletContext().getAttribute("horario");
+            horarioUsuario = (ArrayList) horarios.get(user);
+            
+            showTable.include(request, response);
+            
+            for (UserSchedule uS : horarioUsuario) {
+                out.println("<p>Entrada: " + uS.getEntrada() + "    Salida: " + uS.getSalida());
+            }
+
             out.println("</body>");
             out.println("</html>");
         }
     }
 
-    
-    public enum entradaSalida{ENTRADA, SALIDA}
-    
-    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

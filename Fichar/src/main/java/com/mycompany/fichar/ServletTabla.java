@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -47,18 +48,40 @@ public class ServletTabla extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet ServletTabla at " + request.getContextPath() + "</h1>");
-            
-            ArrayList horarioUsuario;
-            Hashtable horarios;
-            
-            String user = request.getSession().getId();
 
+            ArrayList<UserSchedule> horarioUsuario = new ArrayList();
+            Hashtable horarios = new Hashtable();
+            RequestDispatcher rd = request.getRequestDispatcher("/ServletHorarios");
+
+            // Preguntar porque hay que usar el sessionId
+            String sessionId = request.getSession().getId();
+            String user = (String) request.getSession().getAttribute("user");
+            UserSchedule uS = new UserSchedule();
+
+            entradaSalida entrada = entradaSalida.ENTRADA;
+            entradaSalida salida = entradaSalida.SALIDA;
+
+            if (request.getAttribute("inicio") == entrada) {
+                uS.setId(sessionId);
+                uS.setEntrada(getHora());
+                horarioUsuario.add(uS);
+                horarios.put(user, uS);
+                getServletContext().setAttribute("horario", horarios);
+                rd.forward(request, response);
+            } else if (request.getAttribute("fin") == salida) {
+                uS.setId(user);
+                rd.forward(request, response);
+            }
+
+            
+            
             out.println("</body>");
             out.println("</html>");
         }
+
     }
 
-    // Metodo para conseguir la hora en formato Año, mes, dia, hora, minuto
+// Metodo para conseguir la hora en formato Año, mes, dia, hora, minuto
     public String getHora() {
 
         DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
