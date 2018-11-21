@@ -50,18 +50,20 @@ public class ServletTabla extends HttpServlet {
             out.println("<h1>Servlet ServletTabla at " + request.getContextPath() + "</h1>");
 
             ArrayList<UserSchedule> horarioUsuario = new ArrayList();
-            Hashtable horarios = new Hashtable();
+            Hashtable<String, ArrayList<UserSchedule>> horarios = new Hashtable();
             RequestDispatcher rd = request.getRequestDispatcher("/ServletHorarios");
 
-            // Preguntar porque hay que usar el sessionId
+            // Meter sessionId en key de hashtable
             String sessionId = request.getSession().getId();
             String user = (String) request.getSession().getAttribute("user");
-            UserSchedule uS = new UserSchedule();
-
-            entradaSalida entrada = entradaSalida.ENTRADA;
-            entradaSalida salida = entradaSalida.SALIDA;
-
-            if (request.getAttribute("inicio") == entrada) {
+            UserSchedule guardar = (UserSchedule) request.getAttribute("registro");
+            
+            horarioUsuario.add(guardar);
+            horarios.put(sessionId, horarioUsuario);
+            getServletContext().setAttribute("horario", horarios);
+            rd.forward(request, response);
+            
+            /*if (request.getAttribute("inicio") == entrada) {
                 uS.setId(sessionId);
                 uS.setEntrada(getHora());
                 horarioUsuario.add(uS);
@@ -71,9 +73,7 @@ public class ServletTabla extends HttpServlet {
             } else if (request.getAttribute("fin") == salida) {
                 uS.setId(user);
                 rd.forward(request, response);
-            }
-
-            
+            } */           
             
             out.println("</body>");
             out.println("</html>");
@@ -81,14 +81,7 @@ public class ServletTabla extends HttpServlet {
 
     }
 
-// Metodo para conseguir la hora en formato Año, mes, dia, hora, minuto
-    public String getHora() {
 
-        DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
-        Date date = new Date();
-        return sdf.format(date);
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

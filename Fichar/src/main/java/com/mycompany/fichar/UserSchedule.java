@@ -5,71 +5,66 @@
  */
 package com.mycompany.fichar;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 /**
  *
  * @author root
  */
 public class UserSchedule {
+    
+    /*Tipo (E/S), user, timestamp
+        E | usuario1 | 00:00:00
+        S | usuario1 | 00:00:01
+    */
+
+    public UserSchedule(EntradaSalida tipo, String user, GregorianCalendar calendar) {
+        this.tipo = tipo;
+        this.user = user;
+        this.calendar = calendar;
+    }
+    
+    private EntradaSalida tipo;
+
+    public EntradaSalida getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(EntradaSalida tipo) {
+        this.tipo = tipo;
+    }
         
-    private String id;
+    private String user;
 
     /**
-     * Get the value of id
+     * Get the value of user
      *
-     * @return the value of id
+     * @return the value of user
      */
-    public String getId() {
-        return id;
+    public String getUser() {
+        return user;
     }
 
     /**
-     * Set the value of id
+     * Set the value of user
      *
-     * @param id new value of id
+     * @param id new value of user
      */
-    public void setId(String id) {
-        this.id = id;
-    }
-    
-    private String entrada;
-
-    /**
-     * Get the value of entrada
-     *
-     * @return the value of entrada
-     */
-    public String getEntrada() {
-        return entrada;
-    }
-
-    /**
-     * Set the value of entrada
-     *
-     * @param entrada new value of entrada
-     */
-    public void setEntrada(String entrada) {
-        this.entrada = entrada;
+    public void setId(String user) {
+        this.user = user;
     }
     
-        private String salida;
+    private GregorianCalendar calendar;
 
-    /**
-     * Get the value of salida
-     *
-     * @return the value of salida
-     */
-    public String getSalida() {
-        return salida;
+    public Calendar getCalendar() {
+        return calendar;
     }
 
-    /**
-     * Set the value of salida
-     *
-     * @param salida new value of salida
-     */
-    public void setSalida(String salida) {
-        this.salida = salida;
+    public void setCalendar(GregorianCalendar calendar) {
+        this.calendar = calendar;
     }
+
 
 
 

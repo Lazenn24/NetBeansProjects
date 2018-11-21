@@ -9,7 +9,7 @@ package com.mycompany.fichar;
  *
  * @author admin
  */
-public enum entradaSalida {
+public enum EntradaSalida {
     ENTRADA,
     SALIDA   
 }

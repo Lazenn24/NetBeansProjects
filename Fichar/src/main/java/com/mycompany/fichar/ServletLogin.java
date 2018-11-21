@@ -69,10 +69,11 @@ public class ServletLogin extends HttpServlet {
             uPLogin.setPass(password);
             uPLogin.setUser(user);
             
-            // Para poder usar el usuario en ServletTabla
-            request.getSession().setAttribute("user", user);
+            // Para poder usar el usuario en ServletTabla 
+            // Mejor pasa el objeto entero
+            request.getSession().setAttribute("user", uPLogin.getUser());
 
-            String horarios = "/horarios.html";
+            String horarios = "/ServletHorarios";
             String fallo = "/index.html";
             RequestDispatcher valido = request.getRequestDispatcher(horarios);
             RequestDispatcher noValido = request.getRequestDispatcher(fallo);

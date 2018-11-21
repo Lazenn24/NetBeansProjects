@@ -7,13 +7,8 @@ package com.mycompany.fichar;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -54,29 +49,46 @@ public class ServletHorarios extends HttpServlet {
             RequestDispatcher tabla = request.getRequestDispatcher("/ServletTabla");
             RequestDispatcher showTable = request.getRequestDispatcher("/horarios.html");
 
-            Hashtable horarios;
+            Hashtable<String, ArrayList<UserSchedule>> horarios;
             ArrayList<UserSchedule> horarioUsuario;
             String user = (String) request.getSession().getAttribute("user");
+            GregorianCalendar date = new GregorianCalendar();
+            UserSchedule registro;
+            String fichar = request.getParameter("fichar");
 
-            if (request.getParameter("entrada") != null) {
-                entradaSalida entrada = entradaSalida.ENTRADA;
-                request.setAttribute("inicio", entrada);
+            if(fichar.equals("Fichar entrada")){
+                registro = new UserSchedule(EntradaSalida.ENTRADA, user, date);
+
+                request.setAttribute("registro", registro);
+                tabla.forward(request, response);
+            }else if(fichar.equals("Fichar salida")){
+                registro = new UserSchedule(EntradaSalida.SALIDA, user, date);
+
+                request.setAttribute("registro", registro);
+                tabla.forward(request, response);
+            }
+            /*if (request.getParameter("entrada") != null) {
+                registro = new UserSchedule(EntradaSalida.ENTRADA, user, date);
+
+                request.setAttribute("registro", registro);
                 tabla.forward(request, response);
             }
 
             if (request.getParameter("salida") != null) {
-                entradaSalida salida = entradaSalida.SALIDA;
-                request.setAttribute("fin", salida);
+                registro = new UserSchedule(EntradaSalida.SALIDA, user, date);
+
+                request.setAttribute("registro", registro);
                 tabla.forward(request, response);
-            }
+            }*/
 
             horarios = (Hashtable) request.getServletContext().getAttribute("horario");
             horarioUsuario = (ArrayList) horarios.get(user);
-            
+
             showTable.include(request, response);
-            
+
             for (UserSchedule uS : horarioUsuario) {
-                out.println("<p>Entrada: " + uS.getEntrada() + "    Salida: " + uS.getSalida());
+                out.println("<p>Entrada: " + uS.getCalendar());
+                out.println("<p>Salida: " + uS.getCalendar());
             }
 
             out.println("</body>");
