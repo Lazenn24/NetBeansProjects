@@ -7,11 +7,7 @@ package com.mycompany.fichar;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Hashtable;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -49,39 +45,30 @@ public class ServletTabla extends HttpServlet {
             out.println("<body>");
             out.println("<h1>Servlet ServletTabla at " + request.getContextPath() + "</h1>");
 
-            ArrayList<UserSchedule> horarioUsuario = new ArrayList();
-            Hashtable<String, ArrayList<UserSchedule>> horarios = new Hashtable();
-            RequestDispatcher rd = request.getRequestDispatcher("/ServletHorarios");
-
-            // Meter sessionId en key de hashtable
+            ArrayList<UserSchedule> horarioUsuario;
+            Hashtable<String, ArrayList<UserSchedule>> horarios;
             String sessionId = request.getSession().getId();
-            String user = (String) request.getSession().getAttribute("user");
-            UserSchedule guardar = (UserSchedule) request.getAttribute("registro");
+            UserSchedule guardar = (UserSchedule) request.getSession().getAttribute("registro");
+            RequestDispatcher rd = request.getRequestDispatcher("/ServletMostrarHorarios");
             
-            horarioUsuario.add(guardar);
-            horarios.put(sessionId, horarioUsuario);
-            getServletContext().setAttribute("horario", horarios);
-            rd.forward(request, response);
-            
-            /*if (request.getAttribute("inicio") == entrada) {
-                uS.setId(sessionId);
-                uS.setEntrada(getHora());
-                horarioUsuario.add(uS);
-                horarios.put(user, uS);
+            if (getServletContext().getAttribute("horario") == null) {
+                horarioUsuario = new ArrayList();
+                horarios = new Hashtable();
+                horarios.put(sessionId, horarioUsuario);
                 getServletContext().setAttribute("horario", horarios);
-                rd.forward(request, response);
-            } else if (request.getAttribute("fin") == salida) {
-                uS.setId(user);
-                rd.forward(request, response);
-            } */           
-            
+            } else {
+                horarios = (Hashtable<String, ArrayList<UserSchedule>>) getServletContext().getAttribute("horario");
+                horarioUsuario = (ArrayList<UserSchedule>) horarios.get(sessionId);
+            }
+
+            horarioUsuario.add(guardar);
+
+            rd.forward(request, response);
             out.println("</body>");
             out.println("</html>");
         }
 
     }
-
-
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

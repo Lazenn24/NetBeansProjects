@@ -8,7 +8,6 @@ package com.mycompany.fichar;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,8 +20,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author admin
  */
-@WebServlet(name = "ServletHorarios", urlPatterns = {"/ServletHorarios"})
-public class ServletHorarios extends HttpServlet {
+@WebServlet(name = "ServletMostrarHorarios", urlPatterns = {"/ServletMostrarHorarios"})
+public class ServletMostrarHorarios extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,57 +45,40 @@ public class ServletHorarios extends HttpServlet {
             out.println("<body>");
             out.println("<h1>Servlet ServletHorarios at " + request.getContextPath() + "</h1>");
 
+            out.println("<form action='ServletBotones' method='POST'>");
+            out.println("<input type='submit' name='fichar' value='Fichar entrada'>");
+            out.println("<input type='submit' name='fichar' value='Fichar salida'>");
+
+            out.println("</form>");
+
             RequestDispatcher tabla = request.getRequestDispatcher("/ServletTabla");
-            RequestDispatcher showTable = request.getRequestDispatcher("/horarios.html");
 
             Hashtable<String, ArrayList<UserSchedule>> horarios;
             ArrayList<UserSchedule> horarioUsuario;
-            String user = (String) request.getSession().getAttribute("user");
-            GregorianCalendar date = new GregorianCalendar();
-            UserSchedule registro;
-            String fichar = request.getParameter("fichar");
+            String sessionId = request.getSession().getId();
+            String fallo = (String) request.getSession().getAttribute("fallo");
 
-            if(fichar.equals("Fichar entrada")){
-                registro = new UserSchedule(EntradaSalida.ENTRADA, user, date);
+            if (getServletContext().getAttribute("horario") != null) {
+                // Al estar el arraylist con la key de la sesion, se muestra la misma tabla de horarios para todos los usuarios.
+                // Si cambio la key al nombre de usuario, la tabla cambia.
+                horarios = (Hashtable) request.getServletContext().getAttribute("horario");
+                horarioUsuario = (ArrayList) horarios.get(sessionId);
 
-                request.setAttribute("registro", registro);
-                tabla.forward(request, response);
-            }else if(fichar.equals("Fichar salida")){
-                registro = new UserSchedule(EntradaSalida.SALIDA, user, date);
-
-                request.setAttribute("registro", registro);
-                tabla.forward(request, response);
-            }
-            /*if (request.getParameter("entrada") != null) {
-                registro = new UserSchedule(EntradaSalida.ENTRADA, user, date);
-
-                request.setAttribute("registro", registro);
-                tabla.forward(request, response);
-            }
-
-            if (request.getParameter("salida") != null) {
-                registro = new UserSchedule(EntradaSalida.SALIDA, user, date);
-
-                request.setAttribute("registro", registro);
-                tabla.forward(request, response);
-            }*/
-
-            horarios = (Hashtable) request.getServletContext().getAttribute("horario");
-            horarioUsuario = (ArrayList) horarios.get(user);
-
-            showTable.include(request, response);
-
-            for (UserSchedule uS : horarioUsuario) {
-                out.println("<p>Entrada: " + uS.getCalendar());
-                out.println("<p>Salida: " + uS.getCalendar());
+                for (UserSchedule uS : horarioUsuario) {
+                    out.println("<p>" + uS.getTipo() + ": " + uS.getCalendar().getTime() + "</p>");                   
+                }
+                if (fallo != null) {
+                        out.println((String) request.getSession().getAttribute("fallo"));
+                    }
             }
 
             out.println("</body>");
             out.println("</html>");
         }
+
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *

@@ -92,7 +92,10 @@ public class ServletRegistro extends HttpServlet {
                 if (!usuarios.isEmpty()) {
                     for (UserPass uP : usuarios) {
                         if (uP.compararUser(user)) {
-                            userExists = "El usuario " + user + "ya existe";
+                            userExists = "El usuario " + user + " ya existe";
+                        } else {
+                            usuarios.add(uPSignUp);
+                            valido.forward(request, response);
                         }
 
                     }
