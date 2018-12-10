@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -16,6 +16,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -46,48 +47,55 @@ public class ServletBotones extends HttpServlet {
             out.println("<body>");
             out.println("<h1>Servlet ServletBotones at " + request.getContextPath() + "</h1>");
 
+            // Para impedir entrar sin haberse logeado
+            if (request.getSession().getAttribute("login") != null && (boolean) request.getSession().getAttribute("login") == false) {
+                RequestDispatcher volverLogin = request.getRequestDispatcher("/index.html");
+                volverLogin.forward(request, response);
+            }
+
             UserSchedule registro;
             String fichar = request.getParameter("fichar");
+            //String logout = request.getParameter("logout");
             RequestDispatcher tabla = request.getRequestDispatcher("/ServletTabla");
             RequestDispatcher falloFichar = request.getRequestDispatcher("/ServletMostrarHorarios");
             String user = (String) request.getSession().getAttribute("user");
             GregorianCalendar date = new GregorianCalendar();
-            
+
             // Comprobar ultimo registro
             ArrayList<UserSchedule> horarioUsuario = new ArrayList<UserSchedule>();
             Hashtable<String, ArrayList<UserSchedule>> horarios = new Hashtable<String, ArrayList<UserSchedule>>();
             String sessionId = request.getSession().getId();
             String fallo = null;
 
-            if (fichar.equals("Fichar entrada")) {
+            if (fichar.equals("Fichar entrada") && fichar != null) {
                 // Para comprobar el tipo del ultimo registro 
-               
+
                 if (getServletContext().getAttribute("horario") != null) {
                     horarios = (Hashtable<String, ArrayList<UserSchedule>>) getServletContext().getAttribute("horario");
-                    horarioUsuario =(ArrayList<UserSchedule>) horarios.get(sessionId);
-                    
-                    if((EntradaSalida) horarioUsuario.get(horarioUsuario.size() -1).getTipo() == EntradaSalida.ENTRADA){
-                        fallo ="<p>Debes fichar salida antes</p>";
+                    horarioUsuario = (ArrayList<UserSchedule>) horarios.get(sessionId);
+
+                    if ((EntradaSalida) horarioUsuario.get(horarioUsuario.size() - 1).getTipo() == EntradaSalida.ENTRADA) {
+                        fallo = "<p>Debes fichar salida antes</p>";
                         request.getSession().setAttribute("fallo", fallo);
-                        falloFichar.include(request, response);
+                        falloFichar.forward(request, response);
                     }
                 }
                 registro = new UserSchedule(EntradaSalida.ENTRADA, user, date);
-                
+
                 request.getSession().setAttribute("registro", registro);
                 tabla.forward(request, response);
-                
-            } else if (fichar.equals("Fichar salida")) {
+
+            } else if (fichar.equals("Fichar salida") && fichar != null) {
                 // Para comprobar el tipo del ultimo registro
-                
-                 if (getServletContext().getAttribute("horario") != null) {
+
+                if (getServletContext().getAttribute("horario") != null) {
                     horarios = (Hashtable<String, ArrayList<UserSchedule>>) getServletContext().getAttribute("horario");
-                    horarioUsuario =(ArrayList<UserSchedule>) horarios.get(sessionId);
-                    
-                    if((EntradaSalida) horarioUsuario.get(horarioUsuario.size() -1).getTipo() == EntradaSalida.SALIDA){
-                        fallo ="<p>Debes fichar entrada antes</p>";
+                    horarioUsuario = (ArrayList<UserSchedule>) horarios.get(sessionId);
+
+                    if ((EntradaSalida) horarioUsuario.get(horarioUsuario.size() - 1).getTipo() == EntradaSalida.SALIDA) {
+                        fallo = "<p>Debes fichar entrada antes</p>";
                         request.getSession().setAttribute("fallo", fallo);
-                        falloFichar.include(request, response);
+                        falloFichar.forward(request, response);
                     }
                 }
                 registro = new UserSchedule(EntradaSalida.SALIDA, user, date);
@@ -96,12 +104,23 @@ public class ServletBotones extends HttpServlet {
                 tabla.forward(request, response);
             }
 
+            /*if (logout.equals("Cerrar sesion") && logout != null) {
+                RequestDispatcher rdLogout = request.getRequestDispatcher("/index.html");
+                rdLogout.include(request, response);
+
+                boolean logeado = false;
+                request.getSession().setAttribute("login", logeado);
+                HttpSession session = request.getSession();
+                session.invalidate();
+
+            } */
+
             out.println("</body>");
             out.println("</html>");
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *

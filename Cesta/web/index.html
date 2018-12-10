@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Cesta</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Cesta de la compra</h1>
+        <div>
+            <form action="ServletConfirmar" method="POST">
+                <label for="trabajador">Introduce tu ID de trabajador</label>
+                <input type="text" name="idTrabajador" id="trabajador"><br>
+                    <select name="producto">
+                        <option value="toner">TONER</option>
+                        <option value="papel">PAPEL</option>
+                        <option value="tijeras">TIJERAS</option>
+                        <option value="cuaderno">CUADERNO</option>
+                        <option value="lapiz">LAPIZ</option>
+                    </select><br>
+                    <input type="number" name="cantidad" min="1" max="10">
+                    <br>
+                    <input type="submit" name="submit" value="Ver cesta">   
+            </form>
+        </div>
+    </body>
+</html>

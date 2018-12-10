@@ -15,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -48,10 +49,19 @@ public class ServletMostrarHorarios extends HttpServlet {
             out.println("<form action='ServletBotones' method='POST'>");
             out.println("<input type='submit' name='fichar' value='Fichar entrada'>");
             out.println("<input type='submit' name='fichar' value='Fichar salida'>");
+            out.println("<br>");
+            
+            out.println("<input type='submit' name='logout' value='Cerrar sesion'>");
 
             out.println("</form>");
-
-            RequestDispatcher tabla = request.getRequestDispatcher("/ServletTabla");
+            
+            // Para impedir entrar sin haberse logeado
+            if(request.getSession().getAttribute("login") != null && (boolean) request.getSession().getAttribute("login") == false) {
+                RequestDispatcher volverLogin = request.getRequestDispatcher("/index.html");
+                volverLogin.forward(request, response);
+            }
+            
+            HttpSession session = request.getSession();
 
             Hashtable<String, ArrayList<UserSchedule>> horarios;
             ArrayList<UserSchedule> horarioUsuario;
@@ -63,12 +73,15 @@ public class ServletMostrarHorarios extends HttpServlet {
                 // Si cambio la key al nombre de usuario, la tabla cambia.
                 horarios = (Hashtable) request.getServletContext().getAttribute("horario");
                 horarioUsuario = (ArrayList) horarios.get(sessionId);
-
+                out.println("<table border='1px solid black'>");
                 for (UserSchedule uS : horarioUsuario) {
-                    out.println("<p>" + uS.getTipo() + ": " + uS.getCalendar().getTime() + "</p>");                   
+                    out.println("<tr>");
+                    out.println("<td>" + uS.getTipo() + "</td><td>" + uS.getUser() + "</td><td>" +  uS.getCalendar().getTime() + "</td></tr>");                   
+                    out.println("</tr>");
                 }
+                out.println("</table>");
                 if (fallo != null) {
-                        out.println((String) request.getSession().getAttribute("fallo"));
+                        out.println(fallo);
                     }
             }
 

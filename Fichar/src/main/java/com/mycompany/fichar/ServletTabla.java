@@ -44,6 +44,12 @@ public class ServletTabla extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet ServletTabla at " + request.getContextPath() + "</h1>");
+            
+            // Para impedir entrar sin haberse logeado
+            if(request.getSession().getAttribute("login") != null && (boolean) request.getSession().getAttribute("login") == false) {
+                RequestDispatcher volverLogin = request.getRequestDispatcher("/index.html");
+                volverLogin.forward(request, response);
+            }
 
             ArrayList<UserSchedule> horarioUsuario;
             Hashtable<String, ArrayList<UserSchedule>> horarios;

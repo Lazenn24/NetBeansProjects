@@ -56,6 +56,8 @@ public class ServletLogin extends HttpServlet {
 
             String user = request.getParameter("user");
             String password = request.getParameter("pass");
+            
+            
 
             EJBLoginLocal bean = (EJBLoginLocal) new InitialContext().lookup("java:module/EJBLogin");
 
@@ -64,11 +66,10 @@ public class ServletLogin extends HttpServlet {
 
             ArrayList<UserPass> usuarios = (ArrayList<UserPass>) getServletContext().getAttribute("usuario");
 
-            UserPass uPLogin = new UserPass();
-
+            // Para no tener que volver a crear el usuario en ServletBotones
+            UserPass uPLogin;
             uPLogin.setPass(password);
             uPLogin.setUser(user);
-            
             request.getSession().setAttribute("user", uPLogin.getUser());
 
             String horarios = "/ServletMostrarHorarios";
@@ -79,7 +80,12 @@ public class ServletLogin extends HttpServlet {
             if (validador.validate(bean).isEmpty()) {
                 for (UserPass uP : usuarios) {
                     if (uP.compararUserPass(user, password)) {
+                        
+                        // Para poder asegurar que ha habido logeo previo al entrar en los horarios.
+                        //boolean logeado = true;
+                        request.getSession().setAttribute("login", logeado);
                         valido.forward(request, response);
+                       
                     }
                 }
             } else {
