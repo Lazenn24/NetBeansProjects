@@ -50,43 +50,51 @@ public class ServletMostrarHorarios extends HttpServlet {
             out.println("<input type='submit' name='fichar' value='Fichar entrada'>");
             out.println("<input type='submit' name='fichar' value='Fichar salida'>");
             out.println("<br>");
-            
+
             out.println("<input type='submit' name='logout' value='Cerrar sesion'>");
 
             out.println("</form>");
-            
+
+
             // Para impedir entrar sin haberse logeado
-            if(request.getSession().getAttribute("login") != null && (boolean) request.getSession().getAttribute("login") == false) {
+            HttpSession session = request.getSession(false);
+            if (session == null) {
+                out.println("Debes loguearte primero");
+                RequestDispatcher noLogin = request.getRequestDispatcher("index.html");
+                noLogin.include(request, response);
+
+            } else {
+                /*if(request.getSession().getAttribute("login") != null && (boolean) request.getSession().getAttribute("login") == false) {
                 RequestDispatcher volverLogin = request.getRequestDispatcher("/index.html");
                 volverLogin.forward(request, response);
-            }
-            
-            HttpSession session = request.getSession();
+            }*/
 
-            Hashtable<String, ArrayList<UserSchedule>> horarios;
-            ArrayList<UserSchedule> horarioUsuario;
-            String sessionId = request.getSession().getId();
-            String fallo = (String) request.getSession().getAttribute("fallo");
+                Hashtable<String, ArrayList<UserSchedule>> horarios;
+                ArrayList<UserSchedule> horarioUsuario;
+                String sessionId = request.getSession().getId();
+                String fallo = (String) request.getSession().getAttribute("fallo");
 
-            if (getServletContext().getAttribute("horario") != null) {
-                // Al estar el arraylist con la key de la sesion, se muestra la misma tabla de horarios para todos los usuarios.
-                // Si cambio la key al nombre de usuario, la tabla cambia.
-                horarios = (Hashtable) request.getServletContext().getAttribute("horario");
-                horarioUsuario = (ArrayList) horarios.get(sessionId);
-                out.println("<table border='1px solid black'>");
-                for (UserSchedule uS : horarioUsuario) {
-                    out.println("<tr>");
-                    out.println("<td>" + uS.getTipo() + "</td><td>" + uS.getUser() + "</td><td>" +  uS.getCalendar().getTime() + "</td></tr>");                   
-                    out.println("</tr>");
-                }
-                out.println("</table>");
-                if (fallo != null) {
+                if (getServletContext().getAttribute("horario") != null) {
+                    // Al estar el arraylist con la key de la sesion, se muestra la misma tabla de horarios para todos los usuarios.
+                    // Si cambio la key al nombre de usuario, la tabla cambia.
+                    horarios = (Hashtable) request.getServletContext().getAttribute("horario");
+                    horarioUsuario = (ArrayList) horarios.get(sessionId);
+                    out.println("<table border='1px solid black'>");
+                    for (UserSchedule uS : horarioUsuario) {
+                        out.println("<tr>");
+                        out.println("<td>" + uS.getTipo() + "</td><td>" + uS.getUser() + "</td><td>" + uS.getCalendar().getTime() + "</td></tr>");
+                        out.println("</tr>");
+                    }
+                    out.println("</table>");
+                    if (fallo != null) {
                         out.println(fallo);
                     }
+                }
+
+                out.println("</body>");
+                out.println("</html>");
             }
 
-            out.println("</body>");
-            out.println("</html>");
         }
 
     }

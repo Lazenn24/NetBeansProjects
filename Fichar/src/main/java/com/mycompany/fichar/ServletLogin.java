@@ -19,6 +19,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
@@ -67,10 +68,6 @@ public class ServletLogin extends HttpServlet {
             ArrayList<UserPass> usuarios = (ArrayList<UserPass>) getServletContext().getAttribute("usuario");
 
             // Para no tener que volver a crear el usuario en ServletBotones
-            UserPass uPLogin;
-            uPLogin.setPass(password);
-            uPLogin.setUser(user);
-            request.getSession().setAttribute("user", uPLogin.getUser());
 
             String horarios = "/ServletMostrarHorarios";
             String fallo = "/index.html";
@@ -82,8 +79,9 @@ public class ServletLogin extends HttpServlet {
                     if (uP.compararUserPass(user, password)) {
                         
                         // Para poder asegurar que ha habido logeo previo al entrar en los horarios.
-                        //boolean logeado = true;
-                        request.getSession().setAttribute("login", logeado);
+                        HttpSession sesion = request.getSession();
+                        sesion.setAttribute("user", user);
+                                
                         valido.forward(request, response);
                        
                     }

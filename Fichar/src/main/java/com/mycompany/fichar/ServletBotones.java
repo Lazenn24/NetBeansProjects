@@ -1,4 +1,4 @@
- /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -47,14 +47,19 @@ public class ServletBotones extends HttpServlet {
             out.println("<body>");
             out.println("<h1>Servlet ServletBotones at " + request.getContextPath() + "</h1>");
 
-            // Para impedir entrar sin haberse logeado
-            if (request.getSession().getAttribute("login") != null && (boolean) request.getSession().getAttribute("login") == false) {
-                RequestDispatcher volverLogin = request.getRequestDispatcher("/index.html");
-                volverLogin.forward(request, response);
-            }
+            RequestDispatcher noLogin;
 
+            // Para impedir entrar sin haberse logeado
+            HttpSession session = request.getSession(false);
+            if (session == null) {
+                out.println("Debes loguearte primero");
+                noLogin = request.getRequestDispatcher("index.html");
+                noLogin.include(request, response);
+            } else {
+                
             UserSchedule registro;
             String fichar = request.getParameter("fichar");
+            String logout = request.getParameter("logout");
             //String logout = request.getParameter("logout");
             RequestDispatcher tabla = request.getRequestDispatcher("/ServletTabla");
             RequestDispatcher falloFichar = request.getRequestDispatcher("/ServletMostrarHorarios");
@@ -104,33 +109,29 @@ public class ServletBotones extends HttpServlet {
                 tabla.forward(request, response);
             }
 
-            /*if (logout.equals("Cerrar sesion") && logout != null) {
+            if (logout.equals("Cerrar sesion") && logout != null) {
                 RequestDispatcher rdLogout = request.getRequestDispatcher("/index.html");
                 rdLogout.include(request, response);
-
-                boolean logeado = false;
-                request.getSession().setAttribute("login", logeado);
-                HttpSession session = request.getSession();
                 session.invalidate();
 
-            } */
-
+            }
             out.println("</body>");
             out.println("</html>");
         }
     }
+}
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+/**
+ * Handles the HTTP <code>GET</code> method.
+ *
+ * @param request servlet request
+ * @param response servlet response
+ * @throws ServletException if a servlet-specific error occurs
+ * @throws IOException if an I/O error occurs
+ */
+@Override
+        protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
@@ -144,7 +145,7 @@ public class ServletBotones extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
@@ -155,7 +156,7 @@ public class ServletBotones extends HttpServlet {
      * @return a String containing servlet description
      */
     @Override
-    public String getServletInfo() {
+        public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 
