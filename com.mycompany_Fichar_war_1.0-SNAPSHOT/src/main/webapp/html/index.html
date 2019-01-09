@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Fichar entrada y salida</title>
+        <meta charset="utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h1>Fichar salida y entrada</h1>
+        <fieldset>
+          <legend>
+            Login
+          </legend>
+          <form action="ServletLogin" method="POST">
+            <label>Usuario: </label>
+            <input type="text" name="user"/>
+            <br /><br />
+            <label>Contraseña:</label>
+            <input type="password" name="pass" /><br />
+            <input type="reset" value="Vacíar campos" />
+            <input type="submit" name="submit" value="Entrar"/>
+          </form>
+        </fieldset>
+        <p>
+          Si no estás registrado, puedes hacerlo <a href="registro.html">aquí</a>.
+        </p>
+    </body>
+</html>
