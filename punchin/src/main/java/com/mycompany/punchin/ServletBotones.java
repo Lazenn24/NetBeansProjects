@@ -3,10 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package servlets;
+package com.mycompany.punchin;
 
-import objects.EntradaSalida;
-import objects.UserSchedule;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -40,14 +38,6 @@ public class ServletBotones extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ServletBotones</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ServletBotones at " + request.getContextPath() + "</h1>");
 
             RequestDispatcher noLogin;
 
