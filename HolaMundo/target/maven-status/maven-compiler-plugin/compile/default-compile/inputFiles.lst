@@ -8,11 +8,14 @@
 /home/admin/NetBeansProjects/HolaMundo/src/main/java/com/mycompany/holamundo/URLServlet.java
 /home/admin/NetBeansProjects/HolaMundo/src/main/java/com/mycompany/holamundo/ServletStateful.java
 /home/admin/NetBeansProjects/HolaMundo/src/main/java/com/mycompany/holamundo/DNIValidator.java
+/home/admin/NetBeansProjects/HolaMundo/src/main/java/com/mycompany/holamundo/BeforeAspect.java
+/home/admin/NetBeansProjects/HolaMundo/src/main/java/com/mycompany/holamundo/AOPServlet.java
 /home/admin/NetBeansProjects/HolaMundo/src/main/java/com/mycompany/holamundo/SessionServlet.java
 /home/admin/NetBeansProjects/HolaMundo/src/main/java/com/mycompany/holamundo/HolaMundo.java
 /home/admin/NetBeansProjects/HolaMundo/src/main/java/com/mycompany/holamundo/HiddenServlet.java
 /home/admin/NetBeansProjects/HolaMundo/src/main/java/com/mycompany/holamundo/ServletCookie2.java
 /home/admin/NetBeansProjects/HolaMundo/src/main/java/com/mycompany/holamundo/HolaMundoXML.java
+/home/admin/NetBeansProjects/HolaMundo/src/main/java/com/mycompany/holamundo/AfterAspect.java
 /home/admin/NetBeansProjects/HolaMundo/src/main/java/com/mycompany/holamundo/SessionBean1Local.java
 /home/admin/NetBeansProjects/HolaMundo/src/main/java/com/mycompany/holamundo/AdivinaColor1.java
 /home/admin/NetBeansProjects/HolaMundo/src/main/java/com/mycompany/holamundo/StatefulBeanLocal.java

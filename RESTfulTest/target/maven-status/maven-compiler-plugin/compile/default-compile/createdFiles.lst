@@ -1,0 +1,6 @@
+com/mycompany/restfultest/client/ShowBooksClient.class
+com/mycompany/restfultest/datamodel/entities/Book.class
+com/mycompany/restfultest/webservice/BookService.class
+com/mycompany/restfultest/webservice/ApplicationConfig.class
+com/mycompany/restfultest/datamodel/HibernateUtil.class
+com/mycompany/restfultest/webservice/HelloWorldService.class
