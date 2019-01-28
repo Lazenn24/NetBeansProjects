@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.practicafinal.Entities;
+package com.mycompany.practicafinal.database.Entities;
 
 import java.io.Serializable;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -64,17 +66,6 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(Integer id) {
-        this.id = id;
-    }
-
-    public User(Integer id, String user, String password, String email) {
-        this.id = id;
-        this.user = user;
-        this.password = password;
-        this.email = email;
-    }
-
     public Integer getId() {
         return id;
     }
@@ -96,7 +87,25 @@ public class User implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+         try { 
+  
+            MessageDigest md = MessageDigest.getInstance("MD5"); 
+            
+            byte[] messageDigest = md.digest(password.getBytes()); 
+  
+            BigInteger no = new BigInteger(1, messageDigest); 
+  
+            String hashtext = no.toString(16); 
+            while (hashtext.length() < 32) { 
+                hashtext = "0" + hashtext; 
+            } 
+            this.password = hashtext; 
+        }  
+  
+        // For specifying wrong message digest algorithms 
+        catch (Exception e) { 
+            System.out.println(e.getMessage());
+        } 
     }
 
     public String getEmail() {

@@ -22,8 +22,8 @@
          
          <!--Mappings-->
          
-        <mapping class="com.mycompany.practicafinal.Entities.Schedule"></mapping>
-        <mapping class="com.mycompany.practicafinal.Entities.User"></mapping>       
+        <mapping class="com.mycompany.practicafinal.database.Entities.Schedule"></mapping>
+        <mapping class="com.mycompany.practicafinal.database.Entities.User"></mapping>       
          
         <!--Exemple: 
             <mapping class="com.mycompany.hibernatetest.Entities.Author"></mapping>

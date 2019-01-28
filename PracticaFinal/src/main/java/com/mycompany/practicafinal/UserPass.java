@@ -37,27 +37,8 @@ public class UserPass {
         return pass;
     }
 
-    //Codifica la contraseña directamente
     public void setPass(String pass) {
-         try { 
-  
-            MessageDigest md = MessageDigest.getInstance("MD5"); 
-            
-            byte[] messageDigest = md.digest(pass.getBytes()); 
-  
-            BigInteger no = new BigInteger(1, messageDigest); 
-  
-            String hashtext = no.toString(16); 
-            while (hashtext.length() < 32) { 
-                hashtext = "0" + hashtext; 
-            } 
-            this.pass = pass; 
-        }  
-  
-        // For specifying wrong message digest algorithms 
-        catch (Exception e) { 
-            System.out.println(e.getMessage());
-        } 
+        this.pass = pass;
     }
 
     public String getEmail() {
