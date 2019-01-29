@@ -17,7 +17,7 @@
             <legend>
                 Login
             </legend>
-            <form action="ServletLogin" method="POST">
+            <form action="Login" method="POST">
                 <label>Usuario: </label>
                 <input type="text" name="user"/>
                 <br /><br />
@@ -29,9 +29,9 @@
         </fieldset>
 
         <div id="error">
-            <% if (request.getAttribute("error") != null) {
-                String error = (String) request.getAttribute("error");%>
-                <p><%= error%></p>
+            <%  String error = (String) request.getAttribute("info");
+                if (error != null) { %>
+                   <p><%= error%></p>
             <%}%>
         </div>
         <%@include file="footer.jsp" %>

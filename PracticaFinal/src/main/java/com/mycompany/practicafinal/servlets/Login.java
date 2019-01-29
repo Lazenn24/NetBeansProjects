@@ -4,10 +4,9 @@
  * and open the template in the editor.
  */
 package com.mycompany.practicafinal.servlets;
-
+import static com.mycompany.practicafinal.database.CRUD.Crud.login;
 import com.mycompany.practicafinal.database.Entities.User;
-import static com.mycompany.practicafinal.database.CRUD.Crud.insertUser;
-import com.mycompany.practicafinal.servlets.ejb.EJBSignUpLocal;
+import com.mycompany.practicafinal.servlets.ejb.EJBLoginLocal;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -26,7 +25,7 @@ import javax.validation.Validator;
  *
  * @author admin
  */
-public class Registro extends HttpServlet {
+public class Login extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,48 +45,36 @@ public class Registro extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             String user = request.getParameter("user");
-            String password = request.getParameter("password");
-            String password2 = request.getParameter("password2");
-            String email = request.getParameter("email");
-            String email2 = request.getParameter("email2");
-            String error = "";
+            String password = request.getParameter("pass");
 
-            EJBSignUpLocal bean = (EJBSignUpLocal) new InitialContext().lookup("java:module/EJBSignUp");
-
+            EJBLoginLocal bean = (EJBLoginLocal) new InitialContext().lookup("java:module/EJBLogin");
             bean.setUser(user);
             bean.setPassword(password);
-            bean.setEmail(email);
 
-            if (validator.validate(bean).isEmpty() && email.equals(email2) && password.equals(password2)) {
+            if (validator.validate(bean).isEmpty()) {
 
                 User uP = new User();
                 uP.setUser(user);
-                uP.setEmail(email);
                 uP.setPassword(password);
-
-                request.setAttribute("info", insertUser(uP));
-                request.getRequestDispatcher("index.jsp").forward(request, response);
-
+                
+                if(login(uP)){
+                    request.getSession().setAttribute("user", user);
+                    request.getRequestDispatcher("horarios.jsp").forward(request, response);
+                } else {
+                    request.setAttribute("info", "El nombre de usuario o la contraseña estan equivocados");
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                }
+                                    
             } else {
-
-                for (ConstraintViolation cv : validator.validate(bean)) {
-                    error += cv.getMessage() + "<br>";
+                String info = "";
+                for(ConstraintViolation cv : validator.validate(bean)){
+                    info += cv.getMessage() + "<br>";
                 }
-
-                if (!email.equals(email2)) {
-                    error += "El email no coincide<br>";
-                }
-
-                if (!password.equals(password2)) {
-                    error += "La contraseña no coincide<br>";
-                }
-
-                request.setAttribute("info", error);
-                request.getRequestDispatcher("registro.jsp").forward(request, response);
+                request.setAttribute("info", info);
+                request.getRequestDispatcher("login.jsp").forward(request, response);
             }
 
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -105,7 +92,7 @@ public class Registro extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (NamingException ex) {
-            Logger.getLogger(Registro.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -123,7 +110,7 @@ public class Registro extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (NamingException ex) {
-            Logger.getLogger(Registro.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -7,6 +7,7 @@ package com.mycompany.practicafinal.database.CRUD;
 
 import com.mycompany.practicafinal.HibernateUtil;
 import com.mycompany.practicafinal.database.Entities.User;
+import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -42,6 +43,21 @@ public class Crud {
         return resultado;
 
     }
+    
+    public static boolean login(User user){
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session sesion = sessionFactory.openSession();
+        
+        Query query = sesion.getNamedQuery("QueryLogin");
+        query.setParameter("user", user.getUser());
+        query.setParameter("password", user.getPassword());
+        
+        if(query.list().isEmpty()){
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     private static boolean checkUser(String user, Session sesion) {
 
@@ -58,13 +74,25 @@ public class Crud {
     private static boolean checkEmail(String email, Session sesion) {
 
         Query query = sesion.getNamedQuery("User.findByEmail");
-        query.setParameter("user", email);
+        query.setParameter("email", email);
 
         if (query.list().isEmpty()) {
             return true;
         } else {
             return false;
         }
+    }
+    
+    public static int getUserId(String user){
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session sesion = sessionFactory.openSession();
+        
+        Query query = sesion.getNamedQuery("User.findByUser");
+        query.setParameter("user", user);
+        List<User> users = query.list();
+        users.get(0);
+        
+        return 1;
     }
 
 }

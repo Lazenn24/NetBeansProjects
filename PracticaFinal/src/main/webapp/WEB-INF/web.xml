@@ -4,9 +4,25 @@
         <servlet-name>Registro</servlet-name>
         <servlet-class>com.mycompany.practicafinal.servlets.Registro</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Login</servlet-name>
+        <servlet-class>com.mycompany.practicafinal.servlets.Login</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Botones</servlet-name>
+        <servlet-class>com.mycompany.practicafinal.servlets.Botones</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Registro</servlet-name>
         <url-pattern>/Registro</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/Login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Botones</servlet-name>
+        <url-pattern>/Botones</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

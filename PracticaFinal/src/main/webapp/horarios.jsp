@@ -13,7 +13,8 @@
     </head>
     <body>
         <%@include file="header.jsp" %>
-        <form method="POST" action="ServletBotones">
+        <h1>HORARIOS</h1>
+        <form method="POST" action="Botones">
             <input type='submit' name='boton' value='Fichar entrada'>
             <input type='submit' name='boton' value='Fichar salida'>
         </form>
