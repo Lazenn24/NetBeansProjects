@@ -6,6 +6,7 @@
 package com.mycompany.practicafinal.database.CRUD;
 
 import com.mycompany.practicafinal.HibernateUtil;
+import com.mycompany.practicafinal.database.Entities.Schedule;
 import com.mycompany.practicafinal.database.Entities.User;
 import java.util.List;
 import org.hibernate.Query;
@@ -90,9 +91,39 @@ public class Crud {
         Query query = sesion.getNamedQuery("User.findByUser");
         query.setParameter("user", user);
         List<User> users = query.list();
-        users.get(0);
+        int id = users.get(0).getId();
         
-        return 1;
+        sesion.close();
+        
+        return id;
     }
+    
+    public static void punchIn(Schedule schedule) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session sesion = sessionFactory.openSession();
+        
+        sesion.beginTransaction();
+        
+        sesion.save(schedule);
+        
+        sesion.getTransaction().commit();
+        
+        sesion.close();
+    }
+    
+    public static List<Schedule> getSchedule(User user){
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session sesion = sessionFactory.openSession();
+        
+        Query query = sesion.getNamedQuery("Schedule.findById");
+        query.setParameter("id", user.getId());
+        List<Schedule> horarios = query.list();
+        
+        sesion.close();
+        
+        return horarios;
+    }
+    
+    
 
 }

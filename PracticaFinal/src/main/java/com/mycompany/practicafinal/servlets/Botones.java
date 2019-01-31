@@ -5,13 +5,19 @@
  */
 package com.mycompany.practicafinal.servlets;
 
+import static com.mycompany.practicafinal.database.CRUD.Crud.getSchedule;
 import java.io.IOException;
 import java.io.PrintWriter;
 import static com.mycompany.practicafinal.database.CRUD.Crud.getUserId;
+import static com.mycompany.practicafinal.database.CRUD.Crud.punchIn;
+import com.mycompany.practicafinal.database.Entities.Schedule;
+import com.mycompany.practicafinal.database.Entities.User;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import objects.EntradaSalida;
 
 /**
  *
@@ -37,8 +43,20 @@ public class Botones extends HttpServlet {
 
             if (boton.equals("Fichar entrada")) {
                 int id = getUserId((String) request.getSession().getAttribute("user"));
+                Schedule schedule = new Schedule();
+                schedule.setUser(new User(id));
+                schedule.setTypeOfRegister("ENTRADA");
+                schedule.setDate(new Date());
+                punchIn(schedule);
+                request.setAttribute("horario", getSchedule(new User(id)));
+                request.getRequestDispatcher("horarios.jsp").forward(request, response);
             } else if (boton.equals("Fichar salida")) {
                 int id = getUserId((String) request.getSession().getAttribute("user"));
+                Schedule schedule = new Schedule();
+                schedule.setUser(new User(id));
+                schedule.setTypeOfRegister("SALIDA");
+                schedule.setDate(new Date());
+                punchIn(schedule);
             }
         }
     }
