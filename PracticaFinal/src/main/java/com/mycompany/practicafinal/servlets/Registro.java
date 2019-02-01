@@ -83,7 +83,7 @@ public class Registro extends HttpServlet {
                 }
 
                 request.setAttribute("info", error);
-                request.getRequestDispatcher("registro.jsp").forward(request, response);
+                request.getRequestDispatcher("WEB-INF/registro.jsp").forward(request, response);
             }
 
         }
@@ -103,7 +103,9 @@ public class Registro extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            request.getRequestDispatcher("WEB-INF/registro.jsp").forward(request, response);
             processRequest(request, response);
+            
         } catch (NamingException ex) {
             Logger.getLogger(Registro.class.getName()).log(Level.SEVERE, null, ex);
         }

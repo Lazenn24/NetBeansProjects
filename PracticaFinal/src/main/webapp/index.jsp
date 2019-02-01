@@ -12,8 +12,8 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <%@include file="header.jsp" %>
+        <%@include file="/WEB-INF/header.jsp" %>
         <p>Bienvenido al sistema de fichaje de entradas y salidas</p>
-        <%@include file="footer.jsp" %>
+        <%@include file="/WEB-INF/footer.jsp" %>
     </body>
 </html>

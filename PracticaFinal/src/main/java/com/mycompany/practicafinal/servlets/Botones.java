@@ -5,10 +5,10 @@
  */
 package com.mycompany.practicafinal.servlets;
 
+import static com.mycompany.practicafinal.database.CRUD.Crud.checkLastRegister;
 import static com.mycompany.practicafinal.database.CRUD.Crud.getSchedule;
 import java.io.IOException;
 import java.io.PrintWriter;
-import static com.mycompany.practicafinal.database.CRUD.Crud.getUserId;
 import static com.mycompany.practicafinal.database.CRUD.Crud.punchIn;
 import com.mycompany.practicafinal.database.Entities.Schedule;
 import com.mycompany.practicafinal.database.Entities.User;
@@ -17,7 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import objects.EntradaSalida;
+import com.mycompany.practicafinal.EntradaSalida;
 
 /**
  *
@@ -42,21 +42,38 @@ public class Botones extends HttpServlet {
             String boton = request.getParameter("boton");
 
             if (boton.equals("Fichar entrada")) {
-                int id = getUserId((String) request.getSession().getAttribute("user"));
-                Schedule schedule = new Schedule();
-                schedule.setUser(new User(id));
-                schedule.setTypeOfRegister("ENTRADA");
-                schedule.setDate(new Date());
-                punchIn(schedule);
-                request.setAttribute("horario", getSchedule(new User(id)));
-                request.getRequestDispatcher("horarios.jsp").forward(request, response);
+                //int id = getUserId((String) request.getSession().getAttribute("user"));
+                String user = (String) request.getSession().getAttribute("user");
+                if (checkLastRegister(user, EntradaSalida.ENTRADA)) {
+                    Schedule schedule = new Schedule();
+                    //schedule.setUser(new User(id));
+                    schedule.setTypeOfRegister(EntradaSalida.ENTRADA);
+                    schedule.setDate(new Date());
+                    punchIn(schedule, user);
+                    request.setAttribute("horario", getSchedule(user));
+                    request.getRequestDispatcher("WEB-INF/horarios.jsp").forward(request, response);
+                } else {
+                    String error = "Debes fichar salida antes";
+                    request.setAttribute("horario", getSchedule(user));
+                    request.setAttribute("error", error);
+                    request.getRequestDispatcher("WEB-INF/horarios.jsp").forward(request, response);
+                }
             } else if (boton.equals("Fichar salida")) {
-                int id = getUserId((String) request.getSession().getAttribute("user"));
-                Schedule schedule = new Schedule();
-                schedule.setUser(new User(id));
-                schedule.setTypeOfRegister("SALIDA");
-                schedule.setDate(new Date());
-                punchIn(schedule);
+                //int id = getUserId((String) request.getSession().getAttribute("user"));
+                String user = (String) request.getSession().getAttribute("user");
+                if (checkLastRegister(user, EntradaSalida.SALIDA)) {
+                    Schedule schedule = new Schedule();
+                    schedule.setTypeOfRegister(EntradaSalida.SALIDA);
+                    schedule.setDate(new Date());
+                    punchIn(schedule, user);
+                    request.setAttribute("horario", getSchedule(user));
+                    request.getRequestDispatcher("WEB-INF/horarios.jsp").forward(request, response);
+                } else {
+                    String error = "Debes fichar salida antes";
+                    request.setAttribute("horario", getSchedule(user));
+                    request.setAttribute("error", error);
+                    request.getRequestDispatcher("WEB-INF/horarios.jsp").forward(request, response);
+                }
             }
         }
     }

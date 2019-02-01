@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package com.mycompany.practicafinal.servlets;
+import static com.mycompany.practicafinal.database.CRUD.Crud.getSchedule;
 import static com.mycompany.practicafinal.database.CRUD.Crud.login;
 import com.mycompany.practicafinal.database.Entities.User;
 import com.mycompany.practicafinal.servlets.ejb.EJBLoginLocal;
@@ -59,10 +60,11 @@ public class Login extends HttpServlet {
                 
                 if(login(uP)){
                     request.getSession().setAttribute("user", user);
-                    request.getRequestDispatcher("horarios.jsp").forward(request, response);
+                    request.setAttribute("horario", getSchedule(user));
+                    request.getRequestDispatcher("WEB-INF/horarios.jsp").forward(request, response);
                 } else {
                     request.setAttribute("info", "El nombre de usuario o la contraseña estan equivocados");
-                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                    request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
                 }
                                     
             } else {
@@ -71,7 +73,7 @@ public class Login extends HttpServlet {
                     info += cv.getMessage() + "<br>";
                 }
                 request.setAttribute("info", info);
-                request.getRequestDispatcher("login.jsp").forward(request, response);
+                request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
             }
 
         }
@@ -90,7 +92,9 @@ public class Login extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
             processRequest(request, response);
+            
         } catch (NamingException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }

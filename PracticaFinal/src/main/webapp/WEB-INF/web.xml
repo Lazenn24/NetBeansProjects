@@ -12,6 +12,10 @@
         <servlet-name>Botones</servlet-name>
         <servlet-class>com.mycompany.practicafinal.servlets.Botones</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LogOut</servlet-name>
+        <servlet-class>com.mycompany.practicafinal.servlets.LogOut</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Registro</servlet-name>
         <url-pattern>/Registro</url-pattern>
@@ -23,6 +27,10 @@
     <servlet-mapping>
         <servlet-name>Botones</servlet-name>
         <url-pattern>/Botones</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogOut</servlet-name>
+        <url-pattern>/LogOut</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

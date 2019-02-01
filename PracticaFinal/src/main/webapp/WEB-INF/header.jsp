@@ -8,17 +8,17 @@
 <h1 style="text-align: center">Fichar</h1>
 <% if (request.getSession().getAttribute("user") == null) {%>
     <div class="header" style="text-align: right">
-        <form action="login.jsp" method="GET">
-            <button>Iniciar sesión</button>
+        <form action="Login" method="GET">
+            <button type="submit">Iniciar sesión</button>
         </form>
-        <form action="registro.jsp" method="GET">
-            <button>Registrarse</button>
+        <form action="Registro" method="GET">
+            <button type="submit">Registrarse</button>
         </form>
 <% } else {
     String user =(String) request.getSession().getAttribute("user");%>
     <div class="header" style="text-align: right">
         <p>Bienvenido, <%= user %></p>
-        <form action="LogOutServer" method="POST">
+        <form action="LogOut" method="POST">
             <button>Salir de la sesión</button>
         </form>
     </div>

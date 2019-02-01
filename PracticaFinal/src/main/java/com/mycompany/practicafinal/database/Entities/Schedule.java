@@ -10,6 +10,8 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,6 +25,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import com.mycompany.practicafinal.EntradaSalida;
 
 /**
  *
@@ -33,6 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Schedule.findAll", query = "SELECT s FROM Schedule s")
+    , @NamedQuery(name = "Schedule.findByUser", query = "FROM Schedule s WHERE s.user = :user")
     , @NamedQuery(name = "Schedule.findById", query = "SELECT s FROM Schedule s WHERE s.id = :id")
     , @NamedQuery(name = "Schedule.findByTypeOfRegister", query = "SELECT s FROM Schedule s WHERE s.typeOfRegister = :typeOfRegister")
     , @NamedQuery(name = "Schedule.findByDate", query = "SELECT s FROM Schedule s WHERE s.date = :date")})
@@ -46,9 +50,9 @@ public class Schedule implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 8)
+    @Enumerated(EnumType.STRING)
     @Column(name = "typeOfRegister")
-    private String typeOfRegister;
+    private EntradaSalida typeOfRegister;
     @Basic(optional = false)
     @NotNull
     @Column(name = "date")
@@ -65,11 +69,20 @@ public class Schedule implements Serializable {
         this.id = id;
     }
 
-    public Schedule(Integer id, String typeOfRegister, Date date) {
+    public Schedule(Integer id, EntradaSalida typeOfRegister, Date date) {
         this.id = id;
         this.typeOfRegister = typeOfRegister;
         this.date = date;
     }
+
+    public EntradaSalida getTypeOfRegister() {
+        return typeOfRegister;
+    }
+
+    public void setTypeOfRegister(EntradaSalida typeOfRegister) {
+        this.typeOfRegister = typeOfRegister;
+    }
+
 
     public Integer getId() {
         return id;
@@ -79,13 +92,6 @@ public class Schedule implements Serializable {
         this.id = id;
     }
 
-    public String getTypeOfRegister() {
-        return typeOfRegister;
-    }
-
-    public void setTypeOfRegister(String typeOfRegister) {
-        this.typeOfRegister = typeOfRegister;
-    }
 
     public Date getDate() {
         return date;

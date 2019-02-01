@@ -9,6 +9,7 @@ import com.mycompany.practicafinal.HibernateUtil;
 import com.mycompany.practicafinal.database.Entities.Schedule;
 import com.mycompany.practicafinal.database.Entities.User;
 import java.util.List;
+import com.mycompany.practicafinal.EntradaSalida;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -44,16 +45,16 @@ public class Crud {
         return resultado;
 
     }
-    
-    public static boolean login(User user){
+
+    public static boolean login(User user) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session sesion = sessionFactory.openSession();
-        
+
         Query query = sesion.getNamedQuery("QueryLogin");
         query.setParameter("user", user.getUser());
         query.setParameter("password", user.getPassword());
-        
-        if(query.list().isEmpty()){
+
+        if (query.list().isEmpty()) {
             return false;
         } else {
             return true;
@@ -83,47 +84,68 @@ public class Crud {
             return false;
         }
     }
-    
-    public static int getUserId(String user){
+
+    private static int getUserId(String user) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session sesion = sessionFactory.openSession();
-        
+
         Query query = sesion.getNamedQuery("User.findByUser");
         query.setParameter("user", user);
         List<User> users = query.list();
         int id = users.get(0).getId();
-        
+
         sesion.close();
-        
+
         return id;
     }
-    
-    public static void punchIn(Schedule schedule) {
+
+    public static void punchIn(Schedule schedule, String user) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session sesion = sessionFactory.openSession();
-        
+
+        int id = getUserId(user);
+
+        schedule.setUser(new User(id));
+
         sesion.beginTransaction();
-        
+
         sesion.save(schedule);
-        
+
         sesion.getTransaction().commit();
-        
+
         sesion.close();
     }
-    
-    public static List<Schedule> getSchedule(User user){
+
+    public static List<Schedule> getSchedule(String user) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session sesion = sessionFactory.openSession();
-        
-        Query query = sesion.getNamedQuery("Schedule.findById");
-        query.setParameter("id", user.getId());
+
+        int userId = getUserId(user);
+
+        Query query = sesion.getNamedQuery("Schedule.findByUser");
+        query.setParameter("user", new User(userId));
         List<Schedule> horarios = query.list();
-        
+
         sesion.close();
-        
+
         return horarios;
     }
-    
-    
+
+    public static boolean checkLastRegister(String user, EntradaSalida es) {
+
+        List<Schedule> horario = getSchedule(user);
+
+        if (horario.size() != 0) {
+            Schedule checkRegister = horario.get(horario.size() - 1);
+
+            if (checkRegister.getTypeOfRegister().equals(es)) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
 
 }
