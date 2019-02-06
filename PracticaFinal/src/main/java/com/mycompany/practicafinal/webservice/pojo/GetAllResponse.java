@@ -13,10 +13,19 @@ import java.util.List;
  * @author admin
  */
 public class GetAllResponse {
-    
-        private String msg;
-        
+
+    private String msg;
+
     private List<Schedule> horario;
+
+    public GetAllResponse(String msg) {
+        this.msg = msg;
+    }
+
+    public GetAllResponse() {
+    }
+    
+    
 
     /**
      * Get the value of horario
@@ -36,7 +45,6 @@ public class GetAllResponse {
         this.horario = horario;
     }
 
-
     /**
      * Get the value of msg
      *
@@ -55,5 +63,4 @@ public class GetAllResponse {
         this.msg = msg;
     }
 
-    
 }

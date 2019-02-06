@@ -21,6 +21,7 @@ public class GetAllRequest {
     public GetAllRequest() {
     }
 
+
     public String getUser() {
         return user;
     }
