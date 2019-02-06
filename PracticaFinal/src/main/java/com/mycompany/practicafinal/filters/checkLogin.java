@@ -20,7 +20,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +29,6 @@ import javax.servlet.http.HttpServletResponseWrapper;
  *
  * @author admin
  */
-@WebFilter(filterName = "checkLogin", urlPatterns = {"/*"}, servletNames = {"Botones", "LogOut"})
 public class checkLogin implements Filter {
     
     private static final boolean debug = false;
@@ -50,8 +48,9 @@ public class checkLogin implements Filter {
         }
         
         String usuario = (String) request.getSession().getAttribute("user");
-        if(usuario != null){
-            request.setAttribute("error", "Debes haber iniciado sesión para acceder");
+        
+        if(usuario == null){
+            request.setAttribute("error", "Debes haber iniciado sesión para acceder ahí");
             request.getRequestDispatcher("index.jsp").forward(request, response);
         }
         // Write code here to process the request and/or response before

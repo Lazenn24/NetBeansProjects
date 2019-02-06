@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <filter>
+        <filter-name>checkLogin</filter-name>
+        <filter-class>com.mycompany.practicafinal.filters.checkLogin</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>checkLogin</filter-name>
+        <url-pattern>/WEB-INF/horarios.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>checkLogin</filter-name>
+        <servlet-name>LogOut</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>checkLogin</filter-name>
+        <servlet-name>Botones</servlet-name>
+    </filter-mapping>
     <servlet>
         <servlet-name>Registro</servlet-name>
         <servlet-class>com.mycompany.practicafinal.servlets.Registro</servlet-class>
@@ -16,6 +32,10 @@
         <servlet-name>LogOut</servlet-name>
         <servlet-class>com.mycompany.practicafinal.servlets.LogOut</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Redirect</servlet-name>
+        <servlet-class>com.mycompany.practicafinal.servlets.Redirect</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Registro</servlet-name>
         <url-pattern>/Registro</url-pattern>
@@ -31,6 +51,10 @@
     <servlet-mapping>
         <servlet-name>LogOut</servlet-name>
         <url-pattern>/LogOut</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Redirect</servlet-name>
+        <url-pattern>/Redirect</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

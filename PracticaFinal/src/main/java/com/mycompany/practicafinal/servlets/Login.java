@@ -92,7 +92,6 @@ public class Login extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
             processRequest(request, response);
             
         } catch (NamingException ex) {

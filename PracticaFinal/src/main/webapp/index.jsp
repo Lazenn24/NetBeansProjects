@@ -14,6 +14,10 @@
     <body>
         <%@include file="/WEB-INF/header.jsp" %>
         <p>Bienvenido al sistema de fichaje de entradas y salidas</p>
+        <% String error = (String) request.getAttribute("error");
+        if(error != null){%>
+        <p><%= error%></p>
+        <%}%>
         <%@include file="/WEB-INF/footer.jsp" %>
     </body>
 </html>
