@@ -33,12 +33,12 @@ public class Redirect extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             String boton = request.getParameter("boton");
-            
-            if(boton.equals("login")){
+
+            if (boton.equals("login")) {
                 request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
-            } else if(boton.equals("signup")) {
-            request.getRequestDispatcher("/WEB-INF/registro.jsp").forward(request, response);
-                
+            } else if (boton.equals("signup")) {
+                request.getRequestDispatcher("/WEB-INF/registro.jsp").forward(request, response);
+
             }
         }
     }

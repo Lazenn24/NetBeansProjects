@@ -69,6 +69,11 @@
             <version>2.6.1-RC1</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>net.sourceforge.pjl-comp-filter</groupId>
+            <artifactId>pjl-comp-filter</artifactId>
+            <version>1.6.4</version>
+        </dependency>
         
         <!--REST-->
         

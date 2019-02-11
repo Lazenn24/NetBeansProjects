@@ -69,6 +69,12 @@ public class Schedule implements Serializable {
         this.id = id;
     }
 
+    public Schedule(EntradaSalida typeOfRegister, Date date, User user) {
+        this.typeOfRegister = typeOfRegister;
+        this.date = date;
+        this.user = user;
+    }
+
     public Schedule(Integer id, EntradaSalida typeOfRegister, Date date) {
         this.id = id;
         this.typeOfRegister = typeOfRegister;
@@ -83,7 +89,6 @@ public class Schedule implements Serializable {
         this.typeOfRegister = typeOfRegister;
     }
 
-
     public Integer getId() {
         return id;
     }
@@ -91,7 +96,6 @@ public class Schedule implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-
 
     public Date getDate() {
         return date;
@@ -133,5 +137,5 @@ public class Schedule implements Serializable {
     public String toString() {
         return "com.mycompany.practicafinal.database.Entities.Schedule[ id=" + id + " ]";
     }
-    
+
 }
