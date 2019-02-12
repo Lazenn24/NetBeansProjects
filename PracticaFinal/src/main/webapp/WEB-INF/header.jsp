@@ -14,6 +14,7 @@
         <form action="Redirect" method="POST">
             <button type="submit" name="boton" value="signup">Registrarse</button>
         </form>
+    </div>
 <% } else {
     String user =(String) request.getSession().getAttribute("user");%>
     <div class="header" style="text-align: right">
@@ -24,4 +25,3 @@
     </div>
         <%}%>
     <hr>
-</div>
