@@ -18,14 +18,22 @@ public interface EJBSignUpLocal extends EJBLoginLocal {
     
     @Size(min = 5, max = 20, message="El usuario debe contener entre 5 y 20 carácteres")
     @NotNull(message="Debes escribir un usuario")
+    @Override
     public String getUser();
     
+    @Override
     public void setUser(String user);
     
     @Password(message="La contraseña no cumple los requisitos")
     @NotNull(message="Debes escribir una contraseña")
+    @Override
     public String getPassword();
     
+    /**
+     *
+     * @param password
+     */
+    @Override
     public void setPassword(String password);
     
     @Email(message="El email no es correcto")

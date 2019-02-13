@@ -54,7 +54,7 @@ public class Login extends HttpServlet {
             if (validator.validate(bean).isEmpty()) {
 
                 User uP = new User();
-                uP.setUser(user.toLowerCase());
+                uP.setUser(user);
                 uP.setPassword(password);
                 
                 if(login(uP)){

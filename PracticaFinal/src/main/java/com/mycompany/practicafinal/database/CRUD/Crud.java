@@ -25,6 +25,7 @@ import org.hibernate.SessionFactory;
  */
 public class Crud {
 
+    // Inserta los usuarios del registro
     public static String insertUser(User user) {
 
         String resultado = "";
@@ -51,6 +52,7 @@ public class Crud {
 
     }
 
+    // Comprueba que los datos de usuario y contraseña(ya codificados) existan en la BBDD
     public static boolean login(User user) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session sesion = sessionFactory.openSession();
@@ -62,36 +64,7 @@ public class Crud {
         return !query.list().isEmpty();
     }
 
-    private static boolean checkUser(String user, Session sesion) {
-
-        Query query = sesion.getNamedQuery("User.findByUser");
-        query.setParameter("user", user);
-
-        return query.list().isEmpty();
-    }
-
-    private static boolean checkEmail(String email, Session sesion) {
-
-        Query query = sesion.getNamedQuery("User.findByEmail");
-        query.setParameter("email", email);
-
-        return query.list().isEmpty();
-    }
-
-    private static int getUserId(String user) {
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session sesion = sessionFactory.openSession();
-
-        Query query = sesion.getNamedQuery("User.findByUser");
-        query.setParameter("user", user);
-        List<User> users = query.list();
-        int id = users.get(0).getId();
-
-        sesion.close();
-
-        return id;
-    }
-
+    // Añade una entrada o salida al usuario
     public static void punchIn(Schedule schedule, String user) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session sesion = sessionFactory.openSession();
@@ -108,7 +81,8 @@ public class Crud {
 
         sesion.close();
     }
-
+    
+    // Devuelve una lista con todas las entradas y salidas del usuario
     public static List<Schedule> getSchedule(String user) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session sesion = sessionFactory.openSession();
@@ -124,6 +98,7 @@ public class Crud {
         return horarios;
     }
 
+    // Comprueba el tipo del tipo del ultimo registro del usuario
     public static boolean checkLastRegister(String user, EntradaSalida es) {
 
         List<Schedule> horario = getSchedule(user);
@@ -137,7 +112,42 @@ public class Crud {
         }
     }
 
+    // Comprueba si ya existe ese usuario
+    private static boolean checkUser(String user, Session sesion) {
+
+        Query query = sesion.getNamedQuery("User.findByUser");
+        query.setParameter("user", user);
+
+        return query.list().isEmpty();
+    }
+
+    // Comprueba si ya existe ese email
+    private static boolean checkEmail(String email, Session sesion) {
+
+        Query query = sesion.getNamedQuery("User.findByEmail");
+        query.setParameter("email", email);
+
+        return query.list().isEmpty();
+    }
+
+    // Proporciona la id del usuario para poder extraer sus horarios
+    private static int getUserId(String user) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session sesion = sessionFactory.openSession();
+
+        Query query = sesion.getNamedQuery("User.findByUser");
+        query.setParameter("user", user);
+        List<User> users = query.list();
+        int id = users.get(0).getId();
+
+        sesion.close();
+
+        return id;
+    }
+
     // Métodos para webservices
+    
+    // Devuelve todos los horarios de ese usuario, junto a un mensaje informativo
     public static GetAllResponse getScheduleWS(GetAllRequest gar) {
 
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -159,6 +169,7 @@ public class Crud {
         }
     }
 
+    // Añade una entrada o salida a los horarios de ese usuario, y ademas lo devuelve, junto a un mensaje informativo
     public static AddRecordResponse punchInWS(AddRecordRequest arq) {
         if (login(new User(arq.getUser(), arq.getPassword()))) {
 

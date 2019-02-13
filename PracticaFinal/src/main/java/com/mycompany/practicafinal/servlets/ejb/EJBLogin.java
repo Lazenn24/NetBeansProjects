@@ -13,8 +13,8 @@ import javax.ejb.Stateful;
  */
 @Stateful
 public class EJBLogin implements EJBLoginLocal {
-    
-     private String user;
+
+    private String user;
 
     @Override
     public String getUser() {
@@ -27,7 +27,7 @@ public class EJBLogin implements EJBLoginLocal {
     }
 
     private String password;
-    
+
     @Override
     public String getPassword() {
         return password;
@@ -38,5 +38,4 @@ public class EJBLogin implements EJBLoginLocal {
         this.password = password;
     }
 
-    
 }
