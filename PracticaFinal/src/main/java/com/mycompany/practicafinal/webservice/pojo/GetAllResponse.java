@@ -24,6 +24,11 @@ public class GetAllResponse {
 
     public GetAllResponse() {
     }
+
+    public GetAllResponse(String msg, List<Schedule> horario) {
+        this.msg = msg;
+        this.horario = horario;
+    }
     
     
 

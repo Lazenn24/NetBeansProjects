@@ -1,4 +1,4 @@
-package com.mycompany.practicafinal.filters;
+package com.mycompany.practicafinal.filters.gzip;
 
 import java.io.IOException;
 import java.io.OutputStream;

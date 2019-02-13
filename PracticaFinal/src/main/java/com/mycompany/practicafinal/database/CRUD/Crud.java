@@ -10,6 +10,11 @@ import com.mycompany.practicafinal.database.Entities.Schedule;
 import com.mycompany.practicafinal.database.Entities.User;
 import java.util.List;
 import com.mycompany.practicafinal.EntradaSalida;
+import com.mycompany.practicafinal.webservice.pojo.AddRecordRequest;
+import com.mycompany.practicafinal.webservice.pojo.AddRecordResponse;
+import com.mycompany.practicafinal.webservice.pojo.GetAllRequest;
+import com.mycompany.practicafinal.webservice.pojo.GetAllResponse;
+import java.util.Date;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -54,11 +59,7 @@ public class Crud {
         query.setParameter("user", user.getUser());
         query.setParameter("password", user.getPassword());
 
-        if (query.list().isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
+        return !query.list().isEmpty();
     }
 
     private static boolean checkUser(String user, Session sesion) {
@@ -66,11 +67,7 @@ public class Crud {
         Query query = sesion.getNamedQuery("User.findByUser");
         query.setParameter("user", user);
 
-        if (query.list().isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
+        return query.list().isEmpty();
     }
 
     private static boolean checkEmail(String email, Session sesion) {
@@ -78,11 +75,7 @@ public class Crud {
         Query query = sesion.getNamedQuery("User.findByEmail");
         query.setParameter("email", email);
 
-        if (query.list().isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
+        return query.list().isEmpty();
     }
 
     private static int getUserId(String user) {
@@ -135,17 +128,57 @@ public class Crud {
 
         List<Schedule> horario = getSchedule(user);
 
-        if (horario.size() != 0) {
+        if (!horario.isEmpty()) {
             Schedule checkRegister = horario.get(horario.size() - 1);
 
-            if (checkRegister.getTypeOfRegister().equals(es)) {
-                return false;
-            } else {
-                return true;
-            }
+            return !checkRegister.getTypeOfRegister().equals(es);
         } else {
             return true;
         }
+    }
+
+    // Métodos para webservices
+    public static GetAllResponse getScheduleWS(GetAllRequest gar) {
+
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session sesion = sessionFactory.openSession();
+
+        if (login(new User(gar.getUser(), gar.getPassword()))) {
+
+            int userId = getUserId(gar.getUser());
+            Query query = sesion.getNamedQuery("Schedule.findByUser");
+            query.setParameter("user", new User(userId));
+            List<Schedule> horarios = query.list();
+
+            sesion.close();
+
+            return new GetAllResponse("OK", horarios);
+        } else {
+
+            return new GetAllResponse("Login fallido");
+        }
+    }
+
+    public static AddRecordResponse punchInWS(AddRecordRequest arq) {
+        if (login(new User(arq.getUser(), arq.getPassword()))) {
+
+            if (checkLastRegister(arq.getUser(), arq.getTypeOfRegister())) {
+
+                Schedule schedule = new Schedule(arq.getTypeOfRegister(), new Date(), new User(getUserId(arq.getUser())));
+                punchIn(schedule, arq.getUser());
+                return new AddRecordResponse(schedule, "OK");
+            } else {
+
+                if (arq.getTypeOfRegister() == EntradaSalida.ENTRADA) {
+                    return new AddRecordResponse("Debes fichar salida antes");
+                } else if (arq.getTypeOfRegister() == EntradaSalida.SALIDA) {
+                    return new AddRecordResponse("Debes fichar entrada antes");
+                }
+
+            }
+        }
+        return new AddRecordResponse("Login fallido");
+
     }
 
 }

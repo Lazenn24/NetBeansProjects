@@ -5,6 +5,7 @@
  */
 package com.mycompany.practicafinal.filters;
 
+import com.mycompany.practicafinal.filters.gzip.GZipServletResponseWrapper;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;

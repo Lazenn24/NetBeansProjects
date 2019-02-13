@@ -1,4 +1,4 @@
-package com.mycompany.practicafinal.filters;
+package com.mycompany.practicafinal.filters.gzip;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 
-class GZipServletResponseWrapper extends HttpServletResponseWrapper {
+public class GZipServletResponseWrapper extends HttpServletResponseWrapper {
 
     private GZipServletOutputStream gzipOutputStream = null;
     private PrintWriter printWriter = null;

@@ -8,7 +8,7 @@ package com.mycompany.practicafinal.webservice.pojo;
 import com.mycompany.practicafinal.EntradaSalida;
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.util.Date;
+import java.security.NoSuchAlgorithmException;
 
 /**
  *
@@ -44,7 +44,7 @@ public class AddRecordRequest {
             }
             this.password = hashtext;
         } // For specifying wrong message digest algorithms 
-        catch (Exception e) {
+        catch (NoSuchAlgorithmException e) {
             System.out.println(e.getMessage());
         }
     }

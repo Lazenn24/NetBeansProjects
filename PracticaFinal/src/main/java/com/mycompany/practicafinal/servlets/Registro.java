@@ -9,7 +9,6 @@ import com.mycompany.practicafinal.database.Entities.User;
 import static com.mycompany.practicafinal.database.CRUD.Crud.insertUser;
 import com.mycompany.practicafinal.servlets.ejb.EJBSignUpLocal;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -60,7 +59,7 @@ public class Registro extends HttpServlet {
             if (validator.validate(bean).isEmpty() && email.equals(email2) && password.equals(password2)) {
 
                 User uP = new User();
-                uP.setUser(user);
+                uP.setUser(user.toLowerCase());
                 uP.setEmail(email);
                 uP.setPassword(password);
 

@@ -20,6 +20,15 @@ public class AddRecordResponse {
     public AddRecordResponse() {
     }
 
+    public AddRecordResponse(String status) {
+        this.status = status;
+    }
+
+    public AddRecordResponse(Schedule schedule, String status) {
+        this.schedule = schedule;
+        this.status = status;
+    }
+
     public Schedule getSchedule() {
         return schedule;
     }

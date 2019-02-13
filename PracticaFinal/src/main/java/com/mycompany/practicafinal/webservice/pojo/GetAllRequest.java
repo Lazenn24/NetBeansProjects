@@ -7,6 +7,7 @@ package com.mycompany.practicafinal.webservice.pojo;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  *
@@ -49,7 +50,7 @@ public class GetAllRequest {
             }
             this.password = hashtext;
         } // For specifying wrong message digest algorithms 
-        catch (Exception e) {
+        catch (NoSuchAlgorithmException e) {
             System.out.println(e.getMessage());
         }
     }
