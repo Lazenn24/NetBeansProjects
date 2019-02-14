@@ -144,6 +144,15 @@ public class Crud {
 
         return id;
     }
+    
+    public static List<Object[]> getAllSchedules(){
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session sesion = sessionFactory.openSession();
+        
+        Query query = sesion.createQuery("SELECT u.user, s.typeOfRegister, s.date FROM User u, Schedule s WHERE u.id = s.user order by u.user desc");
+        List horarios = query.list();
+        return horarios;
+    }
 
     // Métodos para webservices
     

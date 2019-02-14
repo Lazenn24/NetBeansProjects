@@ -14,6 +14,10 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>checkLogin</filter-name>
+        <url-pattern>/WEB-INF/admin.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>checkLogin</filter-name>
         <servlet-name>Botones</servlet-name>
     </filter-mapping>
     <servlet>

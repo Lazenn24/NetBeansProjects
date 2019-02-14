@@ -4,6 +4,8 @@
     Author     : sergio
 --%>
 
+<%@page import="com.mycompany.practicafinal.EntradaSalida"%>
+<%@page import="java.util.concurrent.TimeUnit"%>
 <%@page import="java.util.List"%>
 <%@page import="com.mycompany.practicafinal.database.Entities.Schedule"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -20,31 +22,41 @@
             <input type='submit' name='boton' value='Fichar entrada'>
             <input type='submit' name='boton' value='Fichar salida'>
         </form>
-       
-        
-        <% List<Schedule> horarios = (List<Schedule>) request.getAttribute("horario"); 
-            if(horarios != null){%>
-            <table border="1">
-                <th>TIPO</th>
-                <th>FECHA</th>
-                <% for(Schedule sc: horarios){%>
-                <tr>
-                    <td>
-                        <%=sc.getTypeOfRegister()%>
-                    </td>
-                    <td>
-                        <%=sc.getDate()%>
-                    </td>
-                </tr>
-                <% }
-            }%>
-            </table>
-            <% String error = (String) request.getAttribute("error");
-            if(error != null){%>
-            <p><%=error%></p>
-            <%}%>
-       
+
+
+        <% List<Schedule> horarios = (List<Schedule>) request.getAttribute("horario");
+            if (horarios != null) {
+                long fecha = 0;%>
+        <table border="1">
+            <th>TIPO</th>
+            <th>FECHA</th>
+            <th>HORAS TRABAJADAS</th>
+                <% for (Schedule sc : horarios) {%>
+            <tr>
+                <td>
+                    <%=sc.getTypeOfRegister()%>
+                </td>
+                <td>
+                    <%=sc.getDate()%>
+                </td>
+                <td><%if (sc.getTypeOfRegister() == EntradaSalida.ENTRADA) {
+                        fecha = sc.getDate().getTime();
+                    } else if (sc.getTypeOfRegister() == EntradaSalida.SALIDA) {
+                        fecha -= sc.getDate().getTime();%>
+                    <%= TimeUnit.MILLISECONDS.toHours(Math.abs(fecha))%>
+                    Horas
+                    <%fecha = 0;}%>
+                </td>
+            </tr>
+            <% }
+                }%>
+        </table>
+        <% String error = (String) request.getAttribute("error");
+            if (error != null) {%>
+        <p><%=error%></p>
+        <%}%>
+
         <%@include file="footer.jsp" %>   
-            
+
     </body>
 </html>

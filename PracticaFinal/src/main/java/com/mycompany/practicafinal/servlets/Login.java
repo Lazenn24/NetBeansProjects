@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package com.mycompany.practicafinal.servlets;
+
+import static com.mycompany.practicafinal.database.CRUD.Crud.getAllSchedules;
 import static com.mycompany.practicafinal.database.CRUD.Crud.getSchedule;
 import static com.mycompany.practicafinal.database.CRUD.Crud.login;
 import com.mycompany.practicafinal.database.Entities.User;
@@ -43,39 +45,44 @@ public class Login extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, NamingException {
         response.setContentType("text/html;charset=UTF-8");
-            /* TODO output your page here. You may use following sample code. */
-            String user = request.getParameter("user");
-            String password = request.getParameter("pass");
+        /* TODO output your page here. You may use following sample code. */
+        String user = request.getParameter("user");
+        String password = request.getParameter("pass");
 
-            EJBLoginLocal bean = (EJBLoginLocal) new InitialContext().lookup("java:module/EJBLogin");
-            bean.setUser(user);
-            bean.setPassword(password);
+        EJBLoginLocal bean = (EJBLoginLocal) new InitialContext().lookup("java:module/EJBLogin");
+        bean.setUser(user);
+        bean.setPassword(password);
 
-            if (validator.validate(bean).isEmpty()) {
+        if (validator.validate(bean).isEmpty()) {
 
-                User uP = new User();
-                uP.setUser(user);
-                uP.setPassword(password);
-                
-                if(login(uP)){
+            User uP = new User();
+            uP.setUser(user);
+            uP.setPassword(password);
+
+            if (login(uP)) {
+                if (uP.getUser().equals("Admin")) {
+                    request.getSession().setAttribute("user", user);
+                    request.setAttribute("horario", getAllSchedules());
+                    request.getRequestDispatcher("/WEB-INF/admin.jsp").forward(request, response);
+                } else {
                     request.getSession().setAttribute("user", user);
                     request.setAttribute("horario", getSchedule(user));
                     request.getRequestDispatcher("WEB-INF/horarios.jsp").forward(request, response);
-                } else {
-                    request.setAttribute("info", "El nombre de usuario o la contraseña estan equivocados");
-                    request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
                 }
-                                    
             } else {
-                String info = "";
-                for(ConstraintViolation cv : validator.validate(bean)){
-                    info += cv.getMessage() + "<br>";
-                }
-                request.setAttribute("info", info);
+                request.setAttribute("info", "El nombre de usuario o la contraseña estan equivocados");
                 request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
             }
 
-        
+        } else {
+            String info = "";
+            for (ConstraintViolation cv : validator.validate(bean)) {
+                info += cv.getMessage() + "<br>";
+            }
+            request.setAttribute("info", info);
+            request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
+        }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -92,7 +99,7 @@ public class Login extends HttpServlet {
             throws ServletException, IOException {
         try {
             processRequest(request, response);
-            
+
         } catch (NamingException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
